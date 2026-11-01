@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Rainmaker - Home</title>
+	<title>Rainmaker - Editor</title>
 
 	<meta name="csrf-token" content="7_dcHR4sLNPGTmia2WCSOxvDOBIHCOMo2djgMVovF3">
 
@@ -15,7 +15,7 @@
 	<link rel="stylesheet" href="./cbl/_assets/css/fonts.css">
 	<link rel="stylesheet" href="./cbl/_assets/css/animate.css">
 	<link rel="stylesheet" href="./cbl/_assets/css/mediaoptima.css">
-	<link rel="stylesheet" href="./_loc_assets/css/styles.css">
+	<link rel="stylesheet" href="./_local/css/inter_slop.css">
 
 	<link rel="stylesheet" type="text/css" href="./cbl/_assets/css/inter_slop.css">
 	<!-- <link rel="stylesheet" type="text/css" href="./cbl/_assets/css/kimi_slop.css"> -->
@@ -38,9 +38,370 @@
 	<script src="./cbl/_assets/js/app.js"></script>
 
 	<style>
-        
+		:root{
+			--black: #0a0a0a;
+			--black-2: #111111;
+			--black-3: #1a1a1a;
+			--black-4: #222222;
+			--white: #fff;
+			--themecolor: #db0072;
+			--darkcolor: #89001d;
+			--danger: #ff3b30;
+			--success: #30d158;
+			--warning: #ff9f0a;
+			--shadow: rgba(0,0,0,0.6);
+			--bg-app: var(--black);
+			--bg-panel: var(--black-2);
+			--bg-panel-2: var(--black-3);
+			--bg-panel-3: var(--black-4);
+			--bg-panel: var(--black-2);
+			--text-bright: var(--white);
+			--border: #111;
+			--bg-canvas: #1a1a1a;
+			--bg-canvas-skin: #2a2a2a;
+
+			--font-display: 'inter_24pt', sans-serif;
+			--font-mono: 'JetBrains Mono', monospace;
+			--font-condensed: 'Oswald', sans-serif;
+			--font-body: 'Inter', sans-serif;
+		}
+
+		body:has(.topbar .dropdown-menu.show) .main{
+			opacity: 0.2;
+			pointer-events: none;
+		}
+	</style>
+
+	<style>
+		/* ============ THEME VARIABLES ============ */
+		:root {
+			--black: #0a0a0a;
+			--black-2: #111111;
+			--black-3: #1a1a1a;
+			--black-4: #222222;
+			--gray-dark: #2a2a2a;
+			--gray-mid: #4a4a4a;
+			--gray: #8a8a8a;
+			--gray-light: #c8c8c8;
+			--gray-lighter: #e8e8e8;
+			--off-white: #f0efe9;
+			--white: #ffffff;
+			--orange: #ff6b1a;
+			--orange-dark: #e55a0a;
+			--orange-light: #ff8c42;
+			--orange-dim: rgba(255, 107, 26, 0.15);
+			--danger: #ff3b30;
+			--success: #30d158;
+			--warning: #ff9f0a;
+			--shadow: rgba(0,0,0,0.6);
+			--bg-app: var(--black);
+			--bg-panel: var(--black-2);
+			--bg-panel-2: var(--black-3);
+			--bg-panel-3: var(--black-4);
+			--bg-canvas: #1a1a1a;
+			--bg-canvas-skin: #2a2a2a;
+			--border: var(--gray-dark);
+			--border-strong: var(--gray-mid);
+			--text: var(--gray-light);
+			--text-bright: var(--white);
+			--text-muted: var(--gray);
+			--accent: var(--orange);
+			--accent-hover: var(--orange-light);
+			--accent-light: var(--orange-light);
+			--app-bg-image: none;
+			--font-display: 'inter_24pt', sans-serif;
+			--font-mono: 'JetBrains Mono', monospace;
+			--font-condensed: 'Oswald', sans-serif;
+			--font-body: 'Inter', sans-serif;
+		}
+
+		body.theme-gradient {
+			--bg-app: #0d0d14;
+			--bg-panel: rgba(15, 15, 25, 0.92);
+			--bg-panel-2: rgba(22, 22, 35, 0.92);
+			--bg-panel-3: rgba(30, 30, 45, 0.92);
+			--border: #2a2a40;
+			--border-strong: #3a3a55;
+			--app-bg-image: linear-gradient(135deg, #0a0a12 0%, #10101e 50%, #0a0a18 100%);
+		}
+
+		body.theme-light {
+			--black: #f5f4ee;
+			--black-2: #ffffff;
+			--black-3: #ebeae3;
+			--black-4: #e0dfd7;
+			--gray-dark: #d0cfc7;
+			--gray-mid: #a09f97;
+			--gray: #70706a;
+			--gray-light: #40403a;
+			--gray-lighter: #c0bfb7;
+			--off-white: #f5f4ee;
+			--white: #ffffff;
+			--bg-app: var(--black);
+			--bg-panel: var(--black-2);
+			--bg-panel-2: var(--black-3);
+			--bg-panel-3: var(--black-4);
+			--bg-canvas: #d8d7d0;
+			--bg-canvas-skin: #ffffff;
+			--border: var(--gray-dark);
+			--border-strong: var(--gray-mid);
+			--text: var(--gray-light);
+			--text-bright: var(--black);
+			--text-muted: var(--gray);
+			--shadow: rgba(0,0,0,0.1);
+		}
+
+
+		/* ============ CANVAS ============ */
+
+		/* ============ BOTTOM STATUS BAR ============ */
+		
+
 	</style>
 </head>
-<body>
-	
+<body data-mode="dark">
+	<!-- TOP BAR -->
+	<div class="topbar">
+		<div class="brand">
+			<div class="brand-icon"><i class="fas fa-cloud-rain"></i></div>
+			<div>
+				<div class="brand-name">_rainMaker</div>
+				<div class="brand-sub">Skins editor</div>
+			</div>
+		</div>
+
+		<div class="divider"></div>
+
+		<button class="skin-selector" id="skinSelector" title="Change Project">
+			<i class="fas fa-folder"></i>
+			<span class="name" id="currentSkinName">Starter</span>
+			<i class="fas fa-caret-down" style="font-size:10px;"></i>
+		</button>
+
+		<button class="skin-selector" id="skinSelector" title="Change skin">
+			<i class="fas fa-file-alt"></i>
+			<span class="name" id="currentSkinName">MYSKIN</span>
+			<i class="fas fa-caret-down" style="font-size:10px;"></i>
+		</button>
+
+		<div class="divider"></div>
+
+		<div class="nav-meta" data-role="metadata_display">
+			<div class="meta-item">
+				<span class="meta-label">PROJ.</span>
+				<span class="meta-value">xcvdr</span>
+			</div>
+			<div class="meta-item">
+				<span class="meta-label">skins</span>
+				<span class="meta-value">3</span>
+			</div>
+			<div class="meta-item">
+				<span class="meta-label">projects</span>
+				<span class="meta-value">10</span>
+			</div>
+		</div>
+
+		<div class="spacer" style="flex:1"></div>
+
+		<!-- <div class="divider"></div> -->
+
+		<div class="flowline gap-tn">
+			<button class="btn-tool" id="btnGrid" title="Toggle Grid">
+				<i class="fas fa-th"></i>
+			</button>
+			<button class="btn-tool" id="btnSnap" title="Snap to Grid">
+				<i class="fas fa-magnet"></i>
+			</button>
+			<button class="btn-tool" id="btnPreview" title="Preview Mode">
+				<i class="fas fa-eye"></i>
+			</button>
+		</div>
+
+		<div class="flowline gap-tn">
+			<div class="dropdown">
+				<button type="button" class="btn-tool outline" data-toggle="dropdown">
+					OPTIONS 
+					<i class="fas fa-caret-down" style="font-size:10px;"></i>
+				</button>
+				<div class="dropdown-menu dropdown-menu-right dropmenu">
+					<a class="dropdown-item flowline left gap-tn centerline" href="#" id="btnNew" title="New Skin"><i class="fa fa-plus"></i> new skin</a>
+					<a class="dropdown-item flowline left gap-tn centerline" href="#" id="btnSkinSettings" title="Skin Settings"><i class="fa fa-cog"></i> settings</a>
+					<a class="dropdown-item flowline left gap-tn centerline" href="#" id="btnSaveSkin" title="Save to Library"><i class="fa fa-save"></i> save</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- <div class="divider"></div> -->
+
+		<div class="btn-group w3-hide" role="group">
+			<button class="btn-tool active" data-theme="dark" title="Dark Theme">
+				<i class="fas fa-moon"></i>
+			</button>
+			<button class="btn-tool" data-theme="gradient" title="Gradient Theme">
+				<i class="fas fa-palette"></i>
+			</button>
+			<button class="btn-tool" data-theme="light" title="Light Theme">
+				<i class="fas fa-sun"></i>
+			</button>
+		</div>
+
+		<div class="divider"></div>
+
+		<button class="btn-tool primary" id="btnGenerate" title="Generate INI Code">
+			<i class="fas fa-code"></i> CODE
+		</button>
+		<button class="btn-tool success" id="btnExport" title="Export as .rmskin ZIP">
+			<i class="fas fa-download"></i> EXPORT
+		</button>
+	</div>
+
+	<div class="main">
+		<!-- LEFT TOOLBAR -->
+		<div class="leftbar">
+			<div class="toolbox w3-hide">
+				<button class="tool-btn" data-mytooltip="Rectangle" data-add="rectangle">
+					<i class="fas fa-square"></i>
+				</button>
+				<button class="tool-btn" data-mytooltip="Rounded Rect" data-add="rounded">
+					<i class="far fa-square"></i>
+				</button>
+				<button class="tool-btn" data-mytooltip="Ellipse" data-add="ellipse">
+					<i class="far fa-circle"></i>
+				</button>
+				<button class="tool-btn" data-mytooltip="Line" data-add="line">
+					<i class="fas fa-minus"></i>
+				</button>
+				<button class="btn- tool-btn" data-mytooltip="Image" data-add="image">
+					<i class="fas fa-image"></i>
+				</button>
+			</div>
+
+			<button class="tool-btn" data-mytooltip="Text" data-add="string">
+				<i class="fas fa-font"></i>
+			</button>
+			<div class="btn- tool-sep"></div>
+
+			<div style="flex:1"></div>
+			<button class="btn- tool-btn" data-mytooltip="Select All" id="btnSelectAll">
+				<i class="fas fa-object-group"></i>
+			</button>
+			<button class="btn- tool-btn" data-mytooltip="Delete" id="btnDelete">
+				<i class="fas fa-trash"></i>
+			</button>
+			<button class="btn- tool-btn" data-mytooltip="Duplicate" id="btnDuplicate">
+				<i class="fas fa-clone"></i>
+			</button>
+
+			<div class="btn- tool-sep"></div>
+			<button class="tool-btn" id="helpFab" title="Help & Tutorial">
+				<i class="fas fa-question"></i>
+			</button>
+		</div>
+
+		<!-- CANVAS -->
+		<div class="canvas-wrap" id="canvasWrap">
+			<div class="align-toolbar" id="alignToolbar">
+				<button class="sq-btn" title="Align Left" data-align="left"><i class="fas fa-align-left"></i></button>
+				<button class="sq-btn" title="Align Center" data-align="center"><i class="fas fa-align-center"></i></button>
+				<button class="sq-btn" title="Align Right" data-align="right"><i class="fas fa-align-right"></i></button>
+				<button class="sq-btn" title="Align Top" data-align="top"><i class="fas fa-arrow-up"></i></button>
+				<button class="sq-btn" title="Align Middle" data-align="middle"><i class="fas fa-arrows-alt-v"></i></button>
+				<button class="sq-btn" title="Align Bottom" data-align="bottom"><i class="fas fa-arrow-down"></i></button>
+			</div>
+
+			<div class="canvas-inner">
+				<div class="skin-canvas show-grid" id="skinCanvas" style="width:400px;height:400px;">
+					<div class="canvas-label" id="canvasLabel">MYSKIN — 400 × 400</div>
+				</div>
+			</div>
+
+			<div class="zoom-controls">
+				<button class="sq-btn" id="btnZoomOut" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+				<div class="zoom-level" id="zoomLevel">100%</div>
+				<button class="sq-btn" id="btnZoomIn" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+				<button class="sq-btn" id="btnZoomReset" title="Reset Zoom"><i class="fas fa-expand"></i></button>
+			</div>
+		</div>
+
+		<!-- RIGHT PANEL -->
+		<div class="rightbar">
+			<div class="panel-tabs">
+				<div class="panel-tab active" data-panel="properties">PROPS</div>
+				<div class="panel-tab" data-panel="layers">LAYERS</div>
+				<div class="panel-tab" data-panel="measures">MEAS</div>
+				<div class="panel-tab" data-panel="variables">VARS</div>
+			</div>
+			<div class="panel-body" id="panelBody">
+				<div id="propertiesPanel">
+					<div class="empty-state" id="emptyState">
+						<i class="fas fa-mouse-pointer"></i>
+						<div class="empty-title">NO SELECTION YET</div>
+						<div style="font-size:11px;">Select an item or use the left toolbar to add</div>
+					</div>
+					<div id="propsContainer" style="display:none;"></div>
+				</div>
+				<div id="layersPanel" style="display:none;">
+					<div class="panel-section">
+						<div class="panel-section-title">
+							<span><span class="num">02</span>LAYERS</span>
+							<span style="font-size:10px;color:var(--text-muted);" id="layerCount">0 ITEMS</span>
+						</div>
+						<div class="layers-list" id="layersList"></div>
+					</div>
+				</div>
+				<div id="measuresPanel" style="display:none;">
+					<div class="panel-section">
+						<div class="panel-section-title">
+							<span><span class="num">03</span>MEASURES</span>
+							<button class="btn-tool" id="btnAddMeasure" style="padding:2px 8px;font-size:10px;">
+								<i class="fas fa-plus"></i> ADD
+							</button>
+						</div>
+						<div id="measuresList"></div>
+						<div class="empty-state" id="emptyMeasures" style="padding:20px;">
+							<i class="fas fa-calculator" style="font-size:32px;"></i>
+							<div class="empty-title">NO MEASURES</div>
+							<div style="font-size:11px;">Add measures to compute dynamic values</div>
+						</div>
+					</div>
+				</div>
+				<div id="variablesPanel" style="display:none;">
+					<div class="panel-section">
+						<div class="panel-section-title">
+							<span><span class="num">04</span>VARIABLES</span>
+							<button class="btn-tool" id="btnAddVariable" style="padding:2px 8px;font-size:10px;">
+								<i class="fas fa-plus"></i> ADD
+							</button>
+						</div>
+						<div id="variablesList"></div>
+						<div class="empty-state" id="emptyVariables" style="padding:20px;">
+							<i class="fas fa-code" style="font-size:32px;"></i>
+							<div class="empty-title">NO VARIABLES</div>
+							<div style="font-size:11px;">Use #varName# in any property field</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="statusbar">
+		<div class="status-item">
+			<span class="mybadge">RM 4.5+</span>
+			<span>COMPATIBLE WITH RAINMETER 4.5 AND LATER</span>
+		</div>
+		<div class="status-item" id="statusMouse">
+			<i class="fas fa-crosshairs"></i>
+			<span>X: 0 Y: 0</span>
+		</div>
+		<div class="status-item" id="statusSelection">
+			<i class="fas fa-object-ungroup"></i>
+			<span>NO SELECTION</span>
+		</div>
+		<div class="spacer"></div>
+		<div class="status-item w3-hide">
+			<i class="fas fa-info-circle"></i>
+			<span>USE A TOOL TO SEE HELP HERE</span>
+		</div>
+	</div>
 </body>
