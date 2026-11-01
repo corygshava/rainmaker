@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Rainmeter Skin Builder</title>
+
+	<base href="../">
+	<meta name="csrf-token" content="7_dcHR4sLNPGTmia2WCSOxvDOBIHCOMo2djgMVovF3">
+
+	<link rel="stylesheet" href="./cbl/_assets/_vendor/BS4/css/bootstrap.min.css">
+	<link rel="stylesheet" href="./cbl/_assets/css/fa-all.css">
+	<link rel="stylesheet" href="./cbl/_assets/css/w3.css">
+	<link rel="stylesheet" href="./cbl/_assets/css/coryG_UIOps.css">
+	<link rel="stylesheet" href="./cbl/_assets/css/coryG_base.css">
+	<link rel="stylesheet" href="./cbl/_assets/css/fonts.css">
+	<link rel="stylesheet" href="./cbl/_assets/css/animate.css">
+	<link rel="stylesheet" href="./cbl/_assets/css/mediaoptima.css">
+
+	<link rel="stylesheet" href="_loc_assets/css/styles.css">
+
+	<link rel="stylesheet" type="text/css" href="./cbl/_assets/css/inter_slop.css">
+	<!-- <link rel="stylesheet" type="text/css" href="./cbl/_assets/css/kimi_slop.css"> -->
+
+	<script src="./cbl/_assets/_vendor/misc/jquery-3.6.0.min.js"></script>
+	<script src="./cbl/_assets/_vendor/misc/popper.min.js"></script>
+	<script src="./cbl/_assets/_vendor/misc/html2canvas.min.js"></script>
+	<script src="./cbl/_assets/_vendor/misc/jspdf.umd.min.js"></script>
+	<script src="./cbl/_assets/_vendor/misc/qrcode.min.js"></script>
+	<script src="./cbl/_assets/js/chart.js"></script>
+	<script src="./cbl/_assets/js/SuperScript.js"></script>
+	<script src="./cbl/_assets/js/toappend.js"></script>
+	<script src="./cbl/_assets/_vendor/BS4/js/bootstrap.bundle.min.js"></script>
+
+	<script src="./cbl/_assets/js/anims.js"></script>
+	<script src="./cbl/_assets/js/coryG_UIOps.js"></script>
+	<script src="./cbl/_assets/js/customalerter.js"></script>
+	<script src="./cbl/_assets/js/super_encryptor.js"></script>
+	<script src="./cbl/_assets/js/app.js"></script>
+	<style>
+		:root {
+			--bg-dark: #1e1e1e;
+			--bg-panel: #252526;
+			--bg-panel-2: #2d2d30;
+			--bg-canvas: #1a1a1a;
+			--border: #3e3e42;
+			--text: #cccccc;
+			--text-muted: #858585;
+			--accent: #0e639c;
+			--accent-hover: #1177bb;
+			--accent-light: #3794ff;
+			--danger: #c72e2e;
+			--success: #388a34;
+		}
+		* { box-sizing: border-box; }
+		html, body {
+			height: 100%;
+			margin: 0;
+			background: var(--bg-dark);
+			color: var(--text);
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+			font-size: 13px;
+			overflow: hidden;
+			user-select: none;
+		}
+		/* Top bar */
+		.topbar {
+			height: 48px;
+			background: var(--bg-panel);
+			border-bottom: 1px solid var(--border);
+			display: flex;
+			align-items: center;
+			padding: 0 12px;
+			gap: 8px;
+		}
+		.topbar .brand {
+			font-weight: 600;
+			color: #fff;
+			margin-right: 16px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+		.topbar .brand i { color: var(--accent-light); }
+		.topbar .divider {
+			width: 1px;
+			height: 24px;
+			background: var(--border);
+			margin: 0 4px;
+		}
+		.btn-tool {
+			background: transparent;
+			border: 1px solid transparent;
+			color: var(--text);
+			padding: 6px 10px;
+			border-radius: 3px;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 12px;
+			transition: all 0.15s;
+		}
+		.btn-tool:hover {
+			background: var(--bg-panel-2);
+			border-color: var(--border);
+			color: #fff;
+		}
+		.btn-tool.primary {
+			background: var(--accent);
+			color: #fff;
+			border-color: var(--accent);
+		}
+		.btn-tool.primary:hover {
+			background: var(--accent-hover);
+			border-color: var(--accent-hover);
+		}
+		.btn-tool.success {
+			background: var(--success);
+			color: #fff;
+			border-color: var(--success);
+		}
+		.btn-tool.success:hover { background: #44a340; }
+		.btn-tool i { font-size: 13px; }
+		.spacer { flex: 1; }
+
+		/* Main layout */
+		.main {
+			display: flex;
+			height: calc(100% - 48px);
+		}
+		/* Left toolbar */
+		.leftbar {
+			width: 56px;
+			background: var(--bg-panel);
+			border-right: 1px solid var(--border);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 8px 0;
+			gap: 4px;
+		}
+		.tool-btn {
+			width: 40px;
+			height: 40px;
+			background: transparent;
+			border: none;
+			color: var(--text);
+			border-radius: 4px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 16px;
+			transition: all 0.15s;
+			position: relative;
+		}
+		.tool-btn:hover {
+			background: var(--bg-panel-2);
+			color: #fff;
+		}
+		.tool-btn.active {
+			background: var(--accent);
+			color: #fff;
+		}
+		.tool-btn[data-tooltip]:hover::after {
+			content: attr(data-tooltip);
+			position: absolute;
+			left: 48px;
+			top: 50%;
+			transform: translateY(-50%);
+			background: #000;
+			color: #fff;
+			padding: 4px 8px;
+			border-radius: 3px;
+			font-size: 11px;
+			white-space: nowrap;
+			z-index: 1000;
+			pointer-events: none;
+		}
+
+		/* Canvas area */
+		.canvas-wrap {
+			flex: 1;
+			overflow: auto;
+			background:
+				linear-gradient(45deg, #222 25%, transparent 25%),
+				linear-gradient(-45deg, #222 25%, transparent 25%),
+				linear-gradient(45deg, transparent 75%, #222 75%),
+				linear-gradient(-45deg, transparent 75%, #222 75%);
+			background-size: 20px 20px;
+			background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+			background-color: #1a1a1a;
+			position: relative;
+		}
+		.canvas-inner {
+			min-width: 100%;
+			min-height: 100%;
+			padding: 40px;
+			display: inline-block;
+		}
+		.skin-canvas {
+			background: #2d2d30;
+			position: relative;
+			box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+			border: 1px solid #444;
+			overflow: visible;
+		}
+		.skin-canvas.show-grid {
+			background-image:
+				linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+				linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+			background-size: 10px 10px;
+		}
+		.canvas-label {
+			position: absolute;
+			top: -22px;
+			left: 0;
+			color: var(--text-muted);
+			font-size: 11px;
+		}
+
+		/* Elements on canvas */
+		.el {
+			position: absolute;
+			cursor: move;
+			box-sizing: border-box;
+		}
+		.el.string-meter {
+			display: flex;
+			align-items: center;
+			white-space: pre;
+			overflow: hidden;
+		}
+		.el.image-meter {
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-color: rgba(255,255,255,0.05);
+		}
+		.el.image-meter::after {
+			content: '\f03e';
+			font-family: 'Font Awesome 5 Free';
+			font-weight: 900;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			color: rgba(255,255,255,0.3);
+			font-size: 24px;
+			pointer-events: none;
+		}
+		.el.selected {
+			outline: 2px solid var(--accent-light) !important;
+			outline-offset: 0;
+		}
+		.el:hover:not(.selected) {
+			outline: 1px dashed rgba(55, 148, 255, 0.5);
+		}
+
+		/* Resize handles */
+		.handles {
+			position: absolute;
+			pointer-events: none;
+			z-index: 9999;
+		}
+		.handle {
+			position: absolute;
+			width: 10px;
+			height: 10px;
+			background: #fff;
+			border: 1px solid var(--accent-light);
+			pointer-events: auto;
+		}
+		.handle.nw { top: -5px; left: -5px; cursor: nwse-resize; }
+		.handle.n  { top: -5px; left: calc(50% - 5px); cursor: ns-resize; }
+		.handle.ne { top: -5px; right: -5px; cursor: nesw-resize; }
+		.handle.e  { top: calc(50% - 5px); right: -5px; cursor: ew-resize; }
+		.handle.se { bottom: -5px; right: -5px; cursor: nwse-resize; }
+		.handle.s  { bottom: -5px; left: calc(50% - 5px); cursor: ns-resize; }
+		.handle.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+		.handle.w  { top: calc(50% - 5px); left: -5px; cursor: ew-resize; }
+
+		/* Right panel */
+		.rightbar {
+			width: 320px;
+			background: var(--bg-panel);
+			border-left: 1px solid var(--border);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+		}
+		.panel-header {
+			padding: 10px 14px;
+			border-bottom: 1px solid var(--border);
+			font-weight: 600;
+			color: #fff;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+		.panel-body {
+			flex: 1;
+			overflow-y: auto;
+			padding: 12px;
+		}
+		.panel-section {
+			margin-bottom: 16px;
+		}
+		.panel-section-title {
+			font-size: 11px;
+			text-transform: uppercase;
+			color: var(--text-muted);
+			letter-spacing: 0.5px;
+			margin-bottom: 8px;
+			font-weight: 600;
+		}
+		.prop-row {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			margin-bottom: 6px;
+		}
+		.prop-row label {
+			width: 60px;
+			margin: 0;
+			color: var(--text-muted);
+			font-size: 12px;
+			flex-shrink: 0;
+		}
+		.prop-row .input-group { flex: 1; }
+		.prop-input {
+			background: var(--bg-dark);
+			border: 1px solid var(--border);
+			color: var(--text);
+			padding: 4px 8px;
+			border-radius: 3px;
+			font-size: 12px;
+			width: 100%;
+			font-family: inherit;
+		}
+		.prop-input:focus {
+			outline: none;
+			border-color: var(--accent-light);
+		}
+		.prop-input[type="color"] {
+			padding: 2px;
+			height: 28px;
+			cursor: pointer;
+		}
+		.prop-row-2 {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 6px;
+			margin-bottom: 6px;
+		}
+		.prop-row-2 .mini {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+		.prop-row-2 .mini label {
+			width: 20px;
+			margin: 0;
+			color: var(--text-muted);
+			font-size: 11px;
+		}
+		.prop-row-4 {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr 1fr;
+			gap: 6px;
+			margin-bottom: 6px;
+		}
+		.prop-row-4 .mini {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+		.prop-row-4 .mini label {
+			width: 16px;
+			margin: 0;
+			color: var(--text-muted);
+			font-size: 11px;
+		}
+		.btn-toggle {
+			background: var(--bg-dark);
+			border: 1px solid var(--border);
+			color: var(--text);
+			padding: 4px 10px;
+			border-radius: 3px;
+			cursor: pointer;
+			font-size: 12px;
+		}
+		.btn-toggle:hover { border-color: var(--accent-light); }
+		.btn-toggle.active {
+			background: var(--accent);
+			color: #fff;
+			border-color: var(--accent);
+		}
+		.btn-row {
+			display: flex;
+			gap: 4px;
+		}
+		.btn-row .btn-toggle { flex: 1; }
+		.empty-state {
+			text-align: center;
+			color: var(--text-muted);
+			padding: 40px 20px;
+		}
+		.empty-state i {
+			font-size: 48px;
+			margin-bottom: 12px;
+			opacity: 0.3;
+		}
+
+		/* Modal tweaks */
+		.modal-content {
+			background: var(--bg-panel);
+			color: var(--text);
+			border: 1px solid var(--border);
+		}
+		.modal-header, .modal-footer {
+			border-color: var(--border);
+		}
+		.modal-title { color: #fff; }
+		.close { color: #fff; text-shadow: none; }
+		pre.code-output {
+			background: #0d0d0d;
+			color: #d4d4d4;
+			padding: 14px;
+			border-radius: 4px;
+			font-family: 'Consolas', 'Monaco', monospace;
+			font-size: 12px;
+			max-height: 500px;
+			overflow: auto;
+			border: 1px solid var(--border);
+			white-space: pre;
+		}
+		.code-output .section { color: #569cd6; font-weight: bold; }
+		.code-output .key { color: #9cdcfe; }
+		.code-output .val { color: #ce9178; }
+		.code-output .comment { color: #6a9955; font-style: italic; }
+
+		/* Scrollbars */
+		::-webkit-scrollbar { width: 10px; height: 10px; }
+		::-webkit-scrollbar-track { background: var(--bg-dark); }
+		::-webkit-scrollbar-thumb { background: #444; border-radius: 5px; }
+		::-webkit-scrollbar-thumb:hover { background: #555; }
+
+		/* Toast */
+		.toast-container {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			z-index: 9999;
+		}
+		.app-toast {
+			background: var(--bg-panel);
+			color: #fff;
+			padding: 10px 16px;
+			border-radius: 4px;
+			border-left: 3px solid var(--accent-light);
+			box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+			margin-top: 8px;
+			animation: slideIn 0.25s ease;
+		}
+		.app-toast.success { border-left-color: var(--success); }
+		.app-toast.error { border-left-color: var(--danger); }
+		@keyframes slideIn {
+			from { transform: translateX(100%); opacity: 0; }
+			to { transform: translateX(0); opacity: 1; }
+		}
+
+		/* Element list (layers) */
+		.layers-list {
+			max-height: 200px;
+			overflow-y: auto;
+		}
+		.layer-item {
+			padding: 6px 10px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			cursor: pointer;
+			border-radius: 3px;
+			font-size: 12px;
+		}
+		.layer-item:hover { background: var(--bg-panel-2); }
+		.layer-item.selected {
+			background: var(--accent);
+			color: #fff;
+		}
+		.layer-item i { opacity: 0.7; width: 14px; }
+		.layer-item .layer-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+		.layer-item .layer-actions { display: none; }
+		.layer-item:hover .layer-actions { display: flex; gap: 4px; }
+		.layer-item .layer-actions button {
+			background: transparent;
+			border: none;
+			color: inherit;
+			cursor: pointer;
+			padding: 2px 4px;
+			font-size: 11px;
+		}
+		.layer-item .layer-actions button:hover { color: var(--accent-light); }
+
+		select.prop-input {
+			appearance: none;
+			background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3e%3cpath fill='%23cccccc' d='M0 0l5 6 5-6z'/%3e%3c/svg%3e");
+			background-repeat: no-repeat;
+			background-position: right 8px center;
+			padding-right: 24px;
+		}
+	</style>
+</head>
+<body>
+
+	<!-- TOP BAR -->
+	<div class="topbar">
+		<div class="brand">
+			<i class="fas fa-cloud-rain"></i>
+			<span>Rainmeter Skin Builder</span>
+		</div>
+		<div class="divider"></div>
+
+		<button class="btn-tool" id="btnNew" title="New Skin">
+			<i class="fas fa-file"></i> New
+		</button>
+		<button class="btn-tool" id="btnSkinSettings" title="Skin Settings">
+			<i class="fas fa-cog"></i> Skin Settings
+		</button>
+
+		<div class="divider"></div>
+
+		<button class="btn-tool" id="btnGrid" title="Toggle Grid">
+			<i class="fas fa-th"></i> Grid
+		</button>
+		<button class="btn-tool" id="btnSnap" title="Snap to Grid">
+			<i class="fas fa-magnet"></i> Snap
+		</button>
+
+		<div class="spacer"></div>
+
+		<button class="btn-tool primary" id="btnGenerate" title="Generate INI Code">
+			<i class="fas fa-code"></i> Generate Code
+		</button>
+		<button class="btn-tool success" id="btnExport" title="Export as .ini file">
+			<i class="fas fa-download"></i> Export .ini
+		</button>
+	</div>
+
+	<!-- MAIN LAYOUT -->
+	<div class="main">
+
+		<!-- LEFT TOOLBAR -->
+		<div class="leftbar">
+			<button class="tool-btn except" data-tooltip="Rectangle" data-add="rectangle">
+				<i class="fas fa-square"></i>
+			</button>
+			<button class="tool-btn except" data-tooltip="Ellipse" data-add="ellipse">
+				<i class="far fa-circle"></i>
+			</button>
+			<button class="tool-btn except" data-tooltip="Line" data-add="line">
+				<i class="fas fa-minus"></i>
+			</button>
+			<button class="tool-btn except" data-tooltip="Text" data-add="string">
+				<i class="fas fa-font"></i>
+			</button>
+			<button class="tool-btn except" data-tooltip="Image" data-add="image">
+				<i class="fas fa-image"></i>
+			</button>
+			<div style="flex:1"></div>
+			<button class="tool-btn except" data-tooltip="Delete (Del)" id="btnDelete">
+				<i class="fas fa-trash"></i>
+			</button>
+			<button class="tool-btn except" data-tooltip="Duplicate (Ctrl+D)" id="btnDuplicate">
+				<i class="fas fa-clone"></i>
+			</button>
+		</div>
+
+		<!-- CANVAS -->
+		<div class="canvas-wrap" id="canvasWrap">
+			<div class="canvas-inner">
+				<div class="skin-canvas show-grid" id="skinCanvas" style="width:400px;height:400px;">
+					<div class="canvas-label" id="canvasLabel">MySkin — 400 × 400</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- RIGHT PANEL -->
+		<div class="rightbar">
+			<div class="panel-header">
+				<i class="fas fa-sliders-h"></i>
+				<span id="panelTitle">Properties</span>
+			</div>
+			<div class="panel-body" id="panelBody">
+				<div class="empty-state" id="emptyState">
+					<i class="fas fa-mouse-pointer"></i>
+					<div>Select an element to edit its properties</div>
+					<div style="margin-top:8px;font-size:11px;">Or use the left toolbar to add new elements</div>
+				</div>
+				<div id="propsContainer" style="display:none;"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- GENERATE CODE MODAL -->
+	<div class="modal fade" id="codeModal" tabindex="-1">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title"><i class="fas fa-code"></i> Generated Rainmeter INI</h5>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<pre class="code-output" id="codeOutput"></pre>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn-tool" id="btnCopyCode">
+						<i class="fas fa-copy"></i> Copy to Clipboard
+					</button>
+					<button type="button" class="btn-tool success" id="btnDownloadFromModal">
+						<i class="fas fa-download"></i> Download .ini
+					</button>
+					<button type="button" class="btn-tool" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- SKIN SETTINGS MODAL -->
+	<div class="modal fade" id="skinSettingsModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title"><i class="fas fa-cog"></i> Skin Settings</h5>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="prop-row">
+						<label>Name</label>
+						<input type="text" class="prop-input" id="skinNameInput" value="MySkin">
+					</div>
+					<div class="prop-row">
+						<label>Author</label>
+						<input type="text" class="prop-input" id="skinAuthorInput" value="">
+					</div>
+					<div class="prop-row-2">
+						<div class="mini">
+							<label>W</label>
+							<input type="number" class="prop-input" id="skinWInput" value="400" min="1">
+						</div>
+						<div class="mini">
+							<label>H</label>
+							<input type="number" class="prop-input" id="skinHInput" value="400" min="1">
+						</div>
+					</div>
+					<div class="prop-row">
+						<label>Update</label>
+						<input type="number" class="prop-input" id="skinUpdateInput" value="1000" min="-1">
+					</div>
+					<div class="prop-row">
+						<label>Background</label>
+						<input type="color" class="prop-input" id="skinBgInput" value="#000000" style="width:60px;">
+						<input type="number" class="prop-input" id="skinBgAlphaInput" value="0" min="0" max="255" style="width:80px;" title="Alpha (0-255)">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn-tool" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn-tool primary" id="btnApplySkinSettings">Apply</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="toast-container" id="toastContainer"></div>
+
+	<div class="w3-hide">
+		<button data-toggle="modal" data-target="#skinSettingsModal" id="toggle_settings_modal_btn">show settings</button>
+	</div>
+
+	<script>
+		/* =========================================================
+			 RAINMETER SKIN BUILDER — Vanilla JS App
+			 ========================================================= */
+
+		const App = (() => {
+			// ---------- STATE ----------
+			const state = {
+				elements: [],
+				selectedId: null,
+				nextId: 1,
+				skin: {
+					name: 'MySkin',
+					author: '',
+					width: 400,
+					height: 400,
+					update: 1000,
+					bgColor: '#000000',
+					bgAlpha: 0
+				},
+				grid: true,
+				snap: false,
+				gridSize: 10,
+				drag: null,
+				resize: null
+			};
+
+			const meterCounters = { shape: 0, string: 0, image: 0 };
+
+			// ---------- HELPERS ----------
+			const $ = sel => document.querySelector(sel);
+			const $$ = sel => document.querySelectorAll(sel);
+
+			function uid() { return 'el_' + (state.nextId++); }
+
+			function hexToRgb(hex) {
+				hex = hex.replace('#', '');
+				if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+				const n = parseInt(hex, 16);
+				return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+			}
+
+			function rgbToHex(r, g, b) {
+				return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+			}
+
+			function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+			function snapVal(v) {
+				if (!state.snap) return v;
+				return Math.round(v / state.gridSize) * state.gridSize;
+			}
+
+			function toast(msg, type = '') {
+				const t = document.createElement('div');
+				t.className = 'app-toast ' + type;
+				t.textContent = msg;
+				$('#toastContainer').appendChild(t);
+				setTimeout(() => {
+					t.style.transition = 'opacity 0.3s';
+					t.style.opacity = '0';
+					setTimeout(() => t.remove(), 300);
+				}, 2200);
+			}
+
+			// ---------- ELEMENT CREATION ----------
+			function createElement(type, shape) {
+				meterCounters[type] = (meterCounters[type] || 0) + 1;
+				const base = {
+					id: uid(),
+					type,
+					name: (type === 'shape' ? 'MeterShape' : type === 'string' ? 'MeterString' : 'MeterImage') + meterCounters[type],
+					x: 50, y: 50, w: 100, h: 60,
+					fillColor: '#ffffff',
+					fillAlpha: 255,
+					strokeColor: '#000000',
+					strokeAlpha: 255,
+					strokeWidth: 1,
+					rotation: 0,
+					opacity: 255,
+					visible: true
+				};
+
+				if (type === 'shape') {
+					base.shape = shape || 'rectangle';
+					if (shape === 'line') {
+						base.w = 100; base.h = 2;
+						base.strokeWidth = 2;
+						base.fillColor = '#000000';
+						base.fillAlpha = 0;
+					}
+					if (shape === 'ellipse') {
+						base.w = 100; base.h = 100;
+					}
+				} else if (type === 'string') {
+					base.text = 'Sample Text';
+					base.fontSize = 14;
+					base.fontFamily = 'Segoe UI';
+					base.fontColor = '#ffffff';
+					base.fontAlpha = 255;
+					base.fontWeight = 'normal';
+					base.italic = false;
+					base.underline = false;
+					base.align = 'left';
+					base.w = 150; base.h = 30;
+				} else if (type === 'image') {
+					base.src = '';
+					base.preserveAspect = true;
+					base.w = 100; base.h = 100;
+				}
+
+				state.elements.push(base);
+				state.selectedId = base.id;
+				render();
+				return base;
+			}
+
+			function getSelected() {
+				return state.elements.find(e => e.id === state.selectedId);
+			}
+
+			function deleteSelected() {
+				if (!state.selectedId) return;
+				state.elements = state.elements.filter(e => e.id !== state.selectedId);
+				state.selectedId = null;
+				render();
+			}
+
+			function duplicateSelected() {
+				const el = getSelected();
+				if (!el) return;
+				const copy = JSON.parse(JSON.stringify(el));
+				meterCounters[copy.type]++;
+				copy.id = uid();
+				copy.name = copy.name + '_Copy';
+				copy.x += 20;
+				copy.y += 20;
+				state.elements.push(copy);
+				state.selectedId = copy.id;
+				render();
+			}
+
+			// ---------- RENDER ----------
+			function render() {
+				renderCanvas();
+				renderProperties();
+				updateCanvasLabel();
+			}
+
+			function updateCanvasLabel() {
+				$('#canvasLabel').textContent = `${state.skin.name} — ${state.skin.width} × ${state.skin.height}`;
+			}
+
+			function renderCanvas() {
+				const canvas = $('#skinCanvas');
+				canvas.style.width = state.skin.width + 'px';
+				canvas.style.height = state.skin.height + 'px';
+
+				// Remove old elements and handles
+				canvas.querySelectorAll('.el, .handles').forEach(n => n.remove());
+
+				state.elements.forEach(el => {
+					const node = buildElementNode(el);
+					canvas.appendChild(node);
+				});
+
+				// Selection handles
+				const sel = getSelected();
+				if (sel) {
+					const handles = buildHandles(sel);
+					canvas.appendChild(handles);
+				}
+			}
+
+			function buildElementNode(el) {
+				const div = document.createElement('div');
+				div.className = 'el';
+				div.dataset.id = el.id;
+				div.style.left = el.x + 'px';
+				div.style.top = el.y + 'px';
+				div.style.width = el.w + 'px';
+				div.style.height = el.h + 'px';
+				div.style.transform = el.rotation ? `rotate(${el.rotation}deg)` : '';
+				div.style.opacity = el.opacity / 255;
+
+				if (el.id === state.selectedId) div.classList.add('selected');
+
+				if (el.type === 'shape') {
+					const rgb = hexToRgb(el.fillColor);
+					const srgb = hexToRgb(el.strokeColor);
+					if (el.shape === 'rectangle') {
+						div.style.background = `rgba(${rgb.r},${rgb.g},${rgb.b},${el.fillAlpha/255})`;
+						div.style.border = `${el.strokeWidth}px solid rgba(${srgb.r},${srgb.g},${srgb.b},${el.strokeAlpha/255})`;
+					} else if (el.shape === 'ellipse') {
+						div.style.background = `rgba(${rgb.r},${rgb.g},${rgb.b},${el.fillAlpha/255})`;
+						div.style.border = `${el.strokeWidth}px solid rgba(${srgb.r},${srgb.g},${srgb.b},${el.strokeAlpha/255})`;
+						div.style.borderRadius = '50%';
+					} else if (el.shape === 'line') {
+						div.style.background = `rgba(${srgb.r},${srgb.g},${srgb.b},${el.strokeAlpha/255})`;
+						div.style.height = Math.max(1, el.strokeWidth) + 'px';
+						div.style.top = (el.y + el.h/2 - el.strokeWidth/2) + 'px';
+					}
+				} else if (el.type === 'string') {
+					div.classList.add('string-meter');
+					div.textContent = el.text;
+					div.style.color = el.fontColor;
+					div.style.fontSize = el.fontSize + 'px';
+					div.style.fontFamily = el.fontFamily;
+					div.style.fontWeight = el.fontWeight;
+					div.style.fontStyle = el.italic ? 'italic' : 'normal';
+					div.style.textDecoration = el.underline ? 'underline' : 'none';
+					const alignMap = { left: 'flex-start', center: 'center', right: 'flex-end' };
+					div.style.justifyContent = alignMap[el.align] || 'flex-start';
+				} else if (el.type === 'image') {
+					div.classList.add('image-meter');
+					if (el.src) {
+						div.style.backgroundImage = `url('${el.src}')`;
+					}
+				}
+
+				return div;
+			}
+
+			function buildHandles(el) {
+				const wrap = document.createElement('div');
+				wrap.className = 'handles';
+				wrap.style.left = el.x + 'px';
+				wrap.style.top = el.y + 'px';
+				wrap.style.width = el.w + 'px';
+				wrap.style.height = el.h + 'px';
+				wrap.style.transform = el.rotation ? `rotate(${el.rotation}deg)` : '';
+
+				['nw','n','ne','e','se','s','sw','w'].forEach(dir => {
+					const h = document.createElement('div');
+					h.className = 'handle ' + dir;
+					h.dataset.dir = dir;
+					wrap.appendChild(h);
+				});
+				return wrap;
+			}
+
+			// ---------- PROPERTIES PANEL ----------
+			function renderProperties() {
+				const el = getSelected();
+				const container = $('#propsContainer');
+				const empty = $('#emptyState');
+
+				if (!el) {
+					container.style.display = 'none';
+					empty.style.display = 'block';
+					$('#panelTitle').textContent = 'Properties';
+					return;
+				}
+				empty.style.display = 'none';
+				container.style.display = 'block';
+
+				const typeLabel = { shape: 'Shape', string: 'Text', image: 'Image' }[el.type];
+				const shapeLabel = el.type === 'shape' ? ` (${el.shape})` : '';
+				$('#panelTitle').textContent = `${typeLabel}${shapeLabel}`;
+
+				let html = '';
+
+				// Meter name
+				html += `<div class="panel-section">
+					<div class="panel-section-title">Meter</div>
+					<div class="prop-row">
+						<label>Name</label>
+						<input type="text" class="prop-input" data-prop="name" value="${escapeHtml(el.name)}">
+					</div>
+				</div>`;
+
+				// Position & Size
+				html += `<div class="panel-section">
+					<div class="panel-section-title">Position & Size</div>
+					<div class="prop-row-4">
+						<div class="mini"><label>X</label><input type="number" class="prop-input" data-prop="x" value="${el.x}"></div>
+						<div class="mini"><label>Y</label><input type="number" class="prop-input" data-prop="y" value="${el.y}"></div>
+						<div class="mini"><label>W</label><input type="number" class="prop-input" data-prop="w" value="${el.w}" min="1"></div>
+						<div class="mini"><label>H</label><input type="number" class="prop-input" data-prop="h" value="${el.h}" min="1"></div>
+					</div>
+					<div class="prop-row">
+						<label>Rotate</label>
+						<input type="number" class="prop-input" data-prop="rotation" value="${el.rotation}" min="-360" max="360"> 
+						<span style="color:var(--text-muted);font-size:11px;">deg</span>
+					</div>
+					<div class="prop-row">
+						<label>Opacity</label>
+						<input type="range" class="prop-input" data-prop="opacity" value="${el.opacity}" min="0" max="255" style="padding:0;">
+						<span style="color:var(--text-muted);font-size:11px;width:32px;text-align:right;">${el.opacity}</span>
+					</div>
+				</div>`;
+
+				// Shape-specific
+				if (el.type === 'shape') {
+					html += `<div class="panel-section">
+						<div class="panel-section-title">Shape</div>
+						<div class="prop-row">
+							<label>Type</label>
+							<select class="prop-input" data-prop="shape">
+								<option value="rectangle" ${el.shape==='rectangle'?'selected':''}>Rectangle</option>
+								<option value="ellipse" ${el.shape==='ellipse'?'selected':''}>Ellipse</option>
+								<option value="line" ${el.shape==='line'?'selected':''}>Line</option>
+							</select>
+						</div>
+					</div>`;
+
+					if (el.shape !== 'line') {
+						html += `<div class="panel-section">
+							<div class="panel-section-title">Fill</div>
+							<div class="prop-row">
+								<label>Color</label>
+								<input type="color" class="prop-input" data-prop="fillColor" value="${el.fillColor}" style="width:60px;">
+								<input type="number" class="prop-input" data-prop="fillAlpha" value="${el.fillAlpha}" min="0" max="255" title="Alpha 0-255">
+							</div>
+						</div>`;
+					}
+
+					html += `<div class="panel-section">
+						<div class="panel-section-title">Stroke</div>
+						<div class="prop-row">
+							<label>Color</label>
+							<input type="color" class="prop-input" data-prop="strokeColor" value="${el.strokeColor}" style="width:60px;">
+							<input type="number" class="prop-input" data-prop="strokeAlpha" value="${el.strokeAlpha}" min="0" max="255" title="Alpha 0-255">
+						</div>
+						<div class="prop-row">
+							<label>Width</label>
+							<input type="number" class="prop-input" data-prop="strokeWidth" value="${el.strokeWidth}" min="0" max="50">
+						</div>
+					</div>`;
+				}
+
+				// String-specific
+				if (el.type === 'string') {
+					html += `<div class="panel-section">
+						<div class="panel-section-title">Text</div>
+						<div class="prop-row">
+							<label>Content</label>
+							<input type="text" class="prop-input" data-prop="text" value="${escapeHtml(el.text)}">
+						</div>
+						<div class="prop-row">
+							<label>Font</label>
+							<input type="text" class="prop-input" data-prop="fontFamily" value="${escapeHtml(el.fontFamily)}">
+						</div>
+						<div class="prop-row-2">
+							<div class="mini">
+								<label>Size</label>
+								<input type="number" class="prop-input" data-prop="fontSize" value="${el.fontSize}" min="1" max="200">
+							</div>
+							<div class="mini">
+								<label>Color</label>
+								<input type="color" class="prop-input" data-prop="fontColor" value="${el.fontColor}" style="width:100%;">
+							</div>
+						</div>
+						<div class="prop-row">
+							<label>Alpha</label>
+							<input type="number" class="prop-input" data-prop="fontAlpha" value="${el.fontAlpha}" min="0" max="255">
+						</div>
+						<div class="panel-section-title" style="margin-top:10px;">Style</div>
+						<div class="btn-row">
+							<button class="btn-toggle ${el.fontWeight==='bold'?'active':''}" data-toggle="fontWeight" data-val="bold"><i class="fas fa-bold"></i></button>
+							<button class="btn-toggle ${el.italic?'active':''}" data-toggle="italic"><i class="fas fa-italic"></i></button>
+							<button class="btn-toggle ${el.underline?'active':''}" data-toggle="underline"><i class="fas fa-underline"></i></button>
+						</div>
+						<div class="panel-section-title" style="margin-top:10px;">Align</div>
+						<div class="btn-row">
+							<button class="btn-toggle ${el.align==='left'?'active':''}" data-toggle="align" data-val="left"><i class="fas fa-align-left"></i></button>
+							<button class="btn-toggle ${el.align==='center'?'active':''}" data-toggle="align" data-val="center"><i class="fas fa-align-center"></i></button>
+							<button class="btn-toggle ${el.align==='right'?'active':''}" data-toggle="align" data-val="right"><i class="fas fa-align-right"></i></button>
+						</div>
+					</div>`;
+				}
+
+				// Image-specific
+				if (el.type === 'image') {
+					html += `<div class="panel-section">
+						<div class="panel-section-title">Image</div>
+						<div class="prop-row">
+							<label>Source</label>
+							<input type="text" class="prop-input" data-prop="src" value="${escapeHtml(el.src)}" placeholder="path/to/image.png">
+						</div>
+						<div class="prop-row">
+							<label>Aspect</label>
+							<select class="prop-input" data-prop="preserveAspect">
+								<option value="true" ${el.preserveAspect?'selected':''}>Preserve</option>
+								<option value="false" ${!el.preserveAspect?'selected':''}>Stretch</option>
+							</select>
+						</div>
+					</div>`;
+				}
+
+				// Actions
+				html += `<div class="panel-section">
+					<div class="panel-section-title">Actions</div>
+					<div class="btn-row">
+						<button class="btn-tool" id="btnPropDuplicate"><i class="fas fa-clone"></i> Duplicate</button>
+						<button class="btn-tool" id="btnPropDelete" style="color:#ff6b6b;"><i class="fas fa-trash"></i> Delete</button>
+					</div>
+					<div class="btn-row" style="margin-top:6px;">
+						<button class="btn-tool" id="btnBringFront"><i class="fas fa-layer-group"></i> To Front</button>
+						<button class="btn-tool" id="btnSendBack"><i class="fas fa-level-down-alt"></i> To Back</button>
+					</div>
+				</div>`;
+
+				container.innerHTML = html;
+
+				// Bind events
+				container.querySelectorAll('[data-prop]').forEach(inp => {
+					const ev = inp.type === 'range' ? 'input' : 'change';
+					inp.addEventListener(ev, e => {
+						const prop = inp.dataset.prop;
+						let val = inp.value;
+						const numProps = ['x','y','w','h','rotation','opacity','fillAlpha','strokeAlpha','strokeWidth','fontSize','fontAlpha'];
+						if (numProps.includes(prop)) val = parseFloat(val) || 0;
+						if (prop === 'preserveAspect') val = val === 'true';
+						const el = getSelected();
+						if (!el) return;
+						el[prop] = val;
+						render();
+					});
+				});
+
+				container.querySelectorAll('[data-toggle]').forEach(btn => {
+					btn.addEventListener('click', () => {
+						const prop = btn.dataset.toggle;
+						const val = btn.dataset.val;
+						const el = getSelected();
+						if (!el) return;
+						if (val !== undefined) {
+							el[prop] = val;
+						} else {
+							el[prop] = !el[prop];
+						}
+						render();
+					});
+				});
+
+				const bd = $('#btnPropDelete');
+				if (bd) bd.onclick = deleteSelected;
+				const bu = $('#btnPropDuplicate');
+				if (bu) bu.onclick = duplicateSelected;
+				const bf = $('#btnBringFront');
+				if (bf) bf.onclick = () => {
+					const idx = state.elements.findIndex(e => e.id === state.selectedId);
+					if (idx < 0) return;
+					const [el] = state.elements.splice(idx, 1);
+					state.elements.push(el);
+					render();
+				};
+				const bb = $('#btnSendBack');
+				if (bb) bb.onclick = () => {
+					const idx = state.elements.findIndex(e => e.id === state.selectedId);
+					if (idx < 0) return;
+					const [el] = state.elements.splice(idx, 1);
+					state.elements.unshift(el);
+					render();
+				};
+			}
+
+			function escapeHtml(s) {
+				return String(s).replace(/[&<>"']/g, c => ({
+					'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+				}[c]));
+			}
+
+			// ---------- INTERACTIONS ----------
+			function setupInteractions() {
+				const canvas = $('#skinCanvas');
+
+				canvas.addEventListener('mousedown', e => {
+					const handle = e.target.closest('.handle');
+					if (handle) {
+						startResize(handle.dataset.dir, e);
+						e.stopPropagation();
+						return;
+					}
+					const node = e.target.closest('.el');
+					if (node) {
+						state.selectedId = node.dataset.id;
+						startDrag(e);
+						render();
+						e.stopPropagation();
+					} else {
+						state.selectedId = null;
+						render();
+					}
+				});
+
+				document.addEventListener('mousemove', e => {
+					if (state.drag) doDrag(e);
+					if (state.resize) doResize(e);
+				});
+
+				document.addEventListener('mouseup', e => {
+					state.drag = null;
+					state.resize = null;
+				});
+
+				// Keyboard
+				document.addEventListener('keydown', e => {
+					if (e.target.matches('input, textarea, select')) return;
+					const el = getSelected();
+					if (!el) return;
+					const step = e.shiftKey ? 10 : 1;
+					if (e.key === 'Delete' || e.key === 'Backspace') {
+						deleteSelected();
+						e.preventDefault();
+					} else if (e.key === 'ArrowLeft') {
+						el.x -= step; render(); e.preventDefault();
+					} else if (e.key === 'ArrowRight') {
+						el.x += step; render(); e.preventDefault();
+					} else if (e.key === 'ArrowUp') {
+						el.y -= step; render(); e.preventDefault();
+					} else if (e.key === 'ArrowDown') {
+						el.y += step; render(); e.preventDefault();
+					} else if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+						duplicateSelected();
+						e.preventDefault();
+					}
+				});
+
+				// Toolbar add buttons
+				$$('.tool-btn[data-add]').forEach(btn => {
+					btn.addEventListener('click', () => {
+						const type = btn.dataset.add;
+						if (type === 'string' || type === 'image') {
+							createElement(type);
+						} else {
+							createElement('shape', type);
+						}
+					});
+				});
+
+				$('#btnDelete').onclick = deleteSelected;
+				$('#btnDuplicate').onclick = duplicateSelected;
+
+				// Grid / Snap
+				$('#btnGrid').onclick = () => {
+					state.grid = !state.grid;
+					$('#skinCanvas').classList.toggle('show-grid', state.grid);
+					$('#btnGrid').classList.toggle('active', state.grid);
+				};
+				$('#btnSnap').onclick = () => {
+					state.snap = !state.snap;
+					$('#btnSnap').classList.toggle('active', state.snap);
+					toast('Snap to grid: ' + (state.snap ? 'ON' : 'OFF'));
+				};
+				$('#btnGrid').classList.add('active');
+
+				// Top bar buttons
+				$('#btnNew').onclick = () => {
+					if (state.elements.length && !confirm('Clear all elements?')) return;
+					state.elements = [];
+					state.selectedId = null;
+					render();
+					toast('New skin created', 'success');
+				};
+				$('#btnSkinSettings').onclick = () => {
+					$('#skinNameInput').value = state.skin.name;
+					$('#skinAuthorInput').value = state.skin.author;
+					$('#skinWInput').value = state.skin.width;
+					$('#skinHInput').value = state.skin.height;
+					$('#skinUpdateInput').value = state.skin.update;
+					$('#skinBgInput').value = state.skin.bgColor;
+					$('#skinBgAlphaInput').value = state.skin.bgAlpha;
+					toggle_settings_modal_btn.click();
+				};
+				$('#btnApplySkinSettings').onclick = () => {
+					state.skin.name = $('#skinNameInput').value || 'MySkin';
+					state.skin.author = $('#skinAuthorInput').value;
+					state.skin.width = parseInt($('#skinWInput').value) || 400;
+					state.skin.height = parseInt($('#skinHInput').value) || 400;
+					state.skin.update = parseInt($('#skinUpdateInput').value) || 1000;
+					state.skin.bgColor = $('#skinBgInput').value;
+					state.skin.bgAlpha = parseInt($('#skinBgAlphaInput').value) || 0;
+					toggle_settings_modal_btn.click();
+					render();
+					toast('Skin settings applied', 'success');
+				};
+
+				$('#btnGenerate').onclick = () => {
+					const code = generateINI();
+					$('#codeOutput').textContent = code;
+					$('#codeModal').modal('show');
+				};
+				$('#btnExport').onclick = exportINI;
+				$('#btnCopyCode').onclick = () => {
+					const text = $('#codeOutput').textContent;
+					navigator.clipboard.writeText(text).then(() => {
+						toast('Copied to clipboard!', 'success');
+					}).catch(() => {
+						// fallback
+						const ta = document.createElement('textarea');
+						ta.value = text;
+						document.body.appendChild(ta);
+						ta.select();
+						document.execCommand('copy');
+						ta.remove();
+						toast('Copied to clipboard!', 'success');
+					});
+				};
+				$('#btnDownloadFromModal').onclick = exportINI;
+			}
+
+			// ---------- DRAG ----------
+			function startDrag(e) {
+				const el = getSelected();
+				if (!el) return;
+				const canvasRect = $('#skinCanvas').getBoundingClientRect();
+				state.drag = {
+					startX: e.clientX,
+					startY: e.clientY,
+					origX: el.x,
+					origY: el.y
+				};
+			}
+			function doDrag(e) {
+				const el = getSelected();
+				if (!el || !state.drag) return;
+				const dx = e.clientX - state.drag.startX;
+				const dy = e.clientY - state.drag.startY;
+				el.x = snapVal(state.drag.origX + dx);
+				el.y = snapVal(state.drag.origY + dy);
+				render();
+			}
+
+			// ---------- RESIZE ----------
+			function startResize(dir, e) {
+				const el = getSelected();
+				if (!el) return;
+				state.resize = {
+					dir,
+					startX: e.clientX,
+					startY: e.clientY,
+					origX: el.x, origY: el.y,
+					origW: el.w, origH: el.h
+				};
+			}
+			function doResize(e) {
+				const el = getSelected();
+				if (!el || !state.resize) return;
+				const r = state.resize;
+				const dx = e.clientX - r.startX;
+				const dy = e.clientY - r.startY;
+				const dir = r.dir;
+
+				let x = r.origX, y = r.origY, w = r.origW, h = r.origH;
+
+				if (dir.includes('e')) w = r.origW + dx;
+				if (dir.includes('w')) { w = r.origW - dx; x = r.origX + dx; }
+				if (dir.includes('s')) h = r.origH + dy;
+				if (dir.includes('n')) { h = r.origH - dy; y = r.origY + dy; }
+
+				if (w < 2) { w = 2; if (dir.includes('w')) x = r.origX + r.origW - 2; }
+				if (h < 2) { h = 2; if (dir.includes('n')) y = r.origY + r.origH - 2; }
+
+				el.x = snapVal(x);
+				el.y = snapVal(y);
+				el.w = snapVal(w);
+				el.h = snapVal(h);
+				render();
+			}
+
+			// ---------- INI GENERATION ----------
+			function generateINI() {
+				const s = state.skin;
+				const bgRgb = hexToRgb(s.bgColor);
+				let out = '';
+
+				out += `; -------------------------------------------\n`;
+				out += `; ${s.name}${s.author ? ' by ' + s.author : ''}\n`;
+				out += `; Generated with Rainmeter Skin Builder\n`;
+				out += `; -------------------------------------------\n\n`;
+
+				out += `[Rainmeter]\n`;
+				out += `Update=${s.update}\n`;
+				out += `AccurateText=1\n`;
+				out += `DynamicWindowSize=1\n\n`;
+
+				out += `[Metadata]\n`;
+				out += `Name=${s.name}\n`;
+				if (s.author) out += `Author=${s.author}\n`;
+				out += `Information=A skin created with Rainmeter Skin Builder.\n`;
+				out += `Version=1000000\n\n`;
+
+				out += `[Variables]\n`;
+				out += `; Add your variables here\n\n`;
+
+				// Background meter (if bgAlpha > 0)
+				if (s.bgAlpha > 0) {
+					out += `[MeterBackground]\n`;
+					out += `Meter=Shape\n`;
+					out += `Shape=Rectangle 0,0,${s.width},${s.height} | Fill Color ${bgRgb.r},${bgRgb.g},${bgRgb.b},${s.bgAlpha} | StrokeWidth 0\n`;
+					out += `\n`;
+				}
+
+				// Meters
+				state.elements.forEach(el => {
+					out += `[${el.name}]\n`;
+					if (el.type === 'shape') {
+						out += `Meter=Shape\n`;
+						let shapeStr = '';
+						if (el.shape === 'rectangle') {
+							shapeStr = `Rectangle 0,0,${el.w},${el.h}`;
+						} else if (el.shape === 'ellipse') {
+							shapeStr = `Ellipse ${el.w/2},${el.h/2},${el.w/2},${el.h/2}`;
+						} else if (el.shape === 'line') {
+							shapeStr = `Line 0,${el.h/2},${el.w},${el.h/2}`;
+						}
+						const frgb = hexToRgb(el.fillColor);
+						const srgb = hexToRgb(el.strokeColor);
+						if (el.shape !== 'line') {
+							shapeStr += ` | Fill Color ${frgb.r},${frgb.g},${frgb.b},${el.fillAlpha}`;
+						} else {
+							shapeStr += ` | Fill Color 0,0,0,0`;
+						}
+						shapeStr += ` | StrokeWidth ${el.strokeWidth}`;
+						shapeStr += ` | Stroke Color ${srgb.r},${srgb.g},${srgb.b},${el.strokeAlpha}`;
+						out += `Shape=${shapeStr}\n`;
+					} else if (el.type === 'string') {
+						out += `Meter=String\n`;
+						out += `Text=${el.text}\n`;
+						out += `FontSize=${el.fontSize}\n`;
+						out += `FontFace=${el.fontFamily}\n`;
+						const frgb = hexToRgb(el.fontColor);
+						out += `FontColor=${frgb.r},${frgb.g},${frgb.b},${el.fontAlpha}\n`;
+						if (el.fontWeight === 'bold') out += `FontWeight=700\n`;
+						if (el.italic) out += `Italic=1\n`;
+						if (el.underline) out += `Underline=1\n`;
+						const alignMap = { left: 'Left', center: 'Center', right: 'Right' };
+						out += `StringAlign=${alignMap[el.align] || 'Left'}\n`;
+						out += `AntiAlias=1\n`;
+					} else if (el.type === 'image') {
+						out += `Meter=Image\n`;
+						out += `ImageName=${el.src || 'image.png'}\n`;
+						if (!el.preserveAspect) out += `PreserveAspectRatio=0\n`;
+					}
+
+					out += `X=${el.x}\n`;
+					out += `Y=${el.y}\n`;
+					out += `W=${el.w}\n`;
+					out += `H=${el.h}\n`;
+					if (el.rotation) out += `TransformationMatrix=...\n`; // simplified
+					if (el.opacity < 255) out += `ImageAlpha=${el.opacity}\n`;
+					out += `\n`;
+				});
+
+				return out.trim() + '\n';
+			}
+
+			function exportINI() {
+				const code = generateINI();
+				const blob = new Blob([code], { type: 'text/plain' });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = state.skin.name.replace(/[^\w\-]/g, '_') + '.ini';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+				URL.revokeObjectURL(url);
+				toast('Exported ' + a.download, 'success');
+			}
+
+			// ---------- INIT ----------
+			function init() {
+				setupInteractions();
+				render();
+				// Welcome toast
+				setTimeout(() => toast('Welcome! Use the left toolbar to add elements.'), 300);
+			}
+
+			return { init };
+		})();
+
+		document.addEventListener('DOMContentLoaded', App.init);
+	</script>
+</body>
+</html>
