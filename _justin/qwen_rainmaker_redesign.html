@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Rainmaster — Skins Creator</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="qwen_rainmaker_redesign.css">
+</head>
+<body class="theme-dark">
+
+<!-- TOP BAR -->
+<div class="topbar">
+	<div class="brand">
+		<div class="brand-icon"><i class="fas fa-cloud-rain"></i></div>
+		<div>
+			<div class="brand-name">RAINMASTER</div>
+		</div>
+		<div class="brand-sub">SKINS CREATOR</div>
+	</div>
+	<div class="divider"></div>
+
+	<button class="skin-selector" id="skinSelector" title="Manage skins">
+		<i class="fas fa-file-alt"></i>
+		<span class="name" id="currentSkinName">MYSKIN</span>
+		<i class="fas fa-caret-down" style="font-size:10px;"></i>
+	</button>
+
+	<div class="divider"></div>
+
+	<div class="nav-meta">
+		<div class="meta-item">
+			<span class="meta-label">SUBJ.</span>
+			<span class="meta-value">SKIN ID</span>
+		</div>
+		<div class="meta-item">
+			<span class="meta-label">RM/*</span>
+			<span class="meta-value">v4.5+</span>
+		</div>
+		<div class="meta-item">
+			<span class="meta-label">CM.</span>
+			<span class="meta-value">INI.*</span>
+		</div>
+		<div class="meta-item">
+			<span class="meta-label">DF.ARCH/*</span>
+			<span class="meta-value" id="metaVersion">v2.0.1</span>
+		</div>
+	</div>
+
+	<div class="spacer" style="flex:1"></div>
+
+	<button class="btn-tool" id="btnNew" title="New Skin">
+		<i class="fas fa-file"></i> NEW
+	</button>
+	<button class="btn-tool" id="btnSkinSettings" title="Skin Settings">
+		<i class="fas fa-cog"></i> SETTINGS
+	</button>
+	<button class="btn-tool" id="btnSaveSkin" title="Save to Library">
+		<i class="fas fa-save"></i> SAVE
+	</button>
+
+	<div class="divider"></div>
+
+	<button class="btn-tool" id="btnUndo" title="Undo">
+		<i class="fas fa-undo"></i>
+	</button>
+	<button class="btn-tool" id="btnRedo" title="Redo">
+		<i class="fas fa-redo"></i>
+	</button>
+
+	<div class="divider"></div>
+
+	<button class="btn-tool" id="btnGrid" title="Toggle Grid">
+		<i class="fas fa-th"></i>
+	</button>
+	<button class="btn-tool" id="btnSnap" title="Snap to Grid">
+		<i class="fas fa-magnet"></i>
+	</button>
+	<button class="btn-tool" id="btnPreview" title="Preview Mode">
+		<i class="fas fa-eye"></i>
+	</button>
+
+	<div class="divider"></div>
+
+	<div class="btn-group" role="group">
+		<button class="btn-tool active" data-theme="dark" title="Dark Theme">
+			<i class="fas fa-moon"></i>
+		</button>
+		<button class="btn-tool" data-theme="gradient" title="Gradient Theme">
+			<i class="fas fa-palette"></i>
+		</button>
+		<button class="btn-tool" data-theme="light" title="Light Theme">
+			<i class="fas fa-sun"></i>
+		</button>
+	</div>
+
+	<div class="divider"></div>
+
+	<button class="btn-tool primary" id="btnGenerate" title="Generate INI Code">
+		<i class="fas fa-code"></i> CODE
+	</button>
+	<button class="btn-tool success" id="btnExport" title="Export as .rmskin ZIP">
+		<i class="fas fa-download"></i> EXPORT
+	</button>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main">
+
+	<!-- LEFT TOOLBAR -->
+	<div class="leftbar">
+		<button class="tool-btn" data-tooltip="Rectangle" data-add="rectangle">
+			<i class="fas fa-square"></i>
+		</button>
+		<button class="tool-btn" data-tooltip="Rounded Rect" data-add="rounded">
+			<i class="far fa-square"></i>
+		</button>
+		<button class="tool-btn" data-tooltip="Ellipse" data-add="ellipse">
+			<i class="far fa-circle"></i>
+		</button>
+		<button class="tool-btn" data-tooltip="Line" data-add="line">
+			<i class="fas fa-minus"></i>
+		</button>
+		<div class="tool-sep"></div>
+		<button class="tool-btn" data-tooltip="Text" data-add="string">
+			<i class="fas fa-font"></i>
+		</button>
+		<button class="tool-btn" data-tooltip="Image" data-add="image">
+			<i class="fas fa-image"></i>
+		</button>
+		<div class="tool-sep"></div>
+		<button class="tool-btn" data-tooltip="Select All" id="btnSelectAll">
+			<i class="fas fa-object-group"></i>
+		</button>
+		<div style="flex:1"></div>
+		<button class="tool-btn" data-tooltip="Delete" id="btnDelete">
+			<i class="fas fa-trash"></i>
+		</button>
+		<button class="tool-btn" data-tooltip="Duplicate" id="btnDuplicate">
+			<i class="fas fa-clone"></i>
+		</button>
+	</div>
+
+	<!-- CANVAS -->
+	<div class="canvas-wrap" id="canvasWrap">
+		<div class="align-toolbar" id="alignToolbar">
+			<button title="Align Left" data-align="left"><i class="fas fa-align-left"></i></button>
+			<button title="Align Center" data-align="center"><i class="fas fa-align-center"></i></button>
+			<button title="Align Right" data-align="right"><i class="fas fa-align-right"></i></button>
+			<button title="Align Top" data-align="top"><i class="fas fa-arrow-up"></i></button>
+			<button title="Align Middle" data-align="middle"><i class="fas fa-arrows-alt-v"></i></button>
+			<button title="Align Bottom" data-align="bottom"><i class="fas fa-arrow-down"></i></button>
+		</div>
+		<div class="canvas-inner">
+			<div class="skin-canvas show-grid" id="skinCanvas" style="width:400px;height:400px;">
+				<div class="canvas-label" id="canvasLabel">MYSKIN — 400 × 400</div>
+			</div>
+		</div>
+		<div class="zoom-controls">
+			<button id="btnZoomOut" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+			<div class="zoom-level" id="zoomLevel">100%</div>
+			<button id="btnZoomIn" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+			<button id="btnZoomReset" title="Reset Zoom"><i class="fas fa-expand"></i></button>
+		</div>
+	</div>
+
+	<!-- RIGHT PANEL -->
+	<div class="rightbar">
+		<div class="panel-tabs">
+			<div class="panel-tab active" data-panel="properties">01 / PROPS</div>
+			<div class="panel-tab" data-panel="layers">02 / LAYERS</div>
+			<div class="panel-tab" data-panel="measures">03 / MEAS</div>
+			<div class="panel-tab" data-panel="variables">04 / VARS</div>
+		</div>
+		<div class="panel-body" id="panelBody">
+			<div id="propertiesPanel">
+				<div class="empty-state" id="emptyState">
+					<i class="fas fa-mouse-pointer"></i>
+					<div class="empty-title">NO SELECTION</div>
+					<div style="font-size:11px;">Select an element or use the left toolbar to add</div>
+				</div>
+				<div id="propsContainer" style="display:none;"></div>
+			</div>
+			<div id="layersPanel" style="display:none;">
+				<div class="panel-section">
+					<div class="panel-section-title">
+						<span><span class="num">02</span>LAYERS</span>
+						<span style="font-size:10px;color:var(--text-muted);" id="layerCount">0 ITEMS</span>
+					</div>
+					<div class="layers-list" id="layersList"></div>
+				</div>
+			</div>
+			<div id="measuresPanel" style="display:none;">
+				<div class="panel-section">
+					<div class="panel-section-title">
+						<span><span class="num">03</span>MEASURES</span>
+						<button class="btn-tool" id="btnAddMeasure" style="padding:2px 8px;font-size:10px;">
+							<i class="fas fa-plus"></i> ADD
+						</button>
+					</div>
+					<div id="measuresList"></div>
+					<div class="empty-state" id="emptyMeasures" style="padding:20px;">
+						<i class="fas fa-calculator" style="font-size:32px;"></i>
+						<div class="empty-title">NO MEASURES</div>
+						<div style="font-size:11px;">Add measures to compute dynamic values</div>
+					</div>
+				</div>
+			</div>
+			<div id="variablesPanel" style="display:none;">
+				<div class="panel-section">
+					<div class="panel-section-title">
+						<span><span class="num">04</span>VARIABLES</span>
+						<button class="btn-tool" id="btnAddVariable" style="padding:2px 8px;font-size:10px;">
+							<i class="fas fa-plus"></i> ADD
+						</button>
+					</div>
+					<div id="variablesList"></div>
+					<div class="empty-state" id="emptyVariables" style="padding:20px;">
+						<i class="fas fa-code" style="font-size:32px;"></i>
+						<div class="empty-title">NO VARIABLES</div>
+						<div style="font-size:11px;">Use #varName# in any property field</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+	<div class="status-item">
+		<span class="version-badge">RM 4.5+</span>
+		<span>COMPATIBLE WITH RAINMETER 4.5 AND LATER</span>
+	</div>
+	<div class="status-item" id="statusMouse">
+		<i class="fas fa-crosshairs"></i>
+		<span>X: 0 Y: 0</span>
+	</div>
+	<div class="status-item" id="statusSelection">
+		<i class="fas fa-object-ungroup"></i>
+		<span>NO SELECTION</span>
+	</div>
+	<div class="spacer"></div>
+	<div class="status-item">
+		<i class="fas fa-info-circle"></i>
+		<span>EXPORT CREATES .ZIP WITH @RESOURCES FOLDER</span>
+	</div>
+</div>
+
+<!-- HELP FAB -->
+<button class="help-fab" id="helpFab" title="Help & Tutorial">
+	<i class="fas fa-question"></i>
+</button>
+
+<!-- CONTEXT MENU -->
+<div class="context-menu" id="contextMenu">
+	<div class="context-menu-item" data-action="duplicate"><i class="fas fa-clone"></i> Duplicate</div>
+	<div class="context-menu-item" data-action="delete"><i class="fas fa-trash"></i> Delete</div>
+	<div class="context-menu-sep"></div>
+	<div class="context-menu-item" data-action="front"><i class="fas fa-layer-group"></i> Bring to Front</div>
+	<div class="context-menu-item" data-action="back"><i class="fas fa-level-down-alt"></i> Send to Back</div>
+	<div class="context-menu-sep"></div>
+	<div class="context-menu-item" data-action="lock"><i class="fas fa-lock"></i> Lock/Unlock</div>
+	<div class="context-menu-item" data-action="hide"><i class="fas fa-eye-slash"></i> Hide/Show</div>
+</div>
+
+<!-- TUTORIAL MODAL -->
+<div class="modal fade" id="tutorialModal" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fas fa-graduation-cap"></i> WELCOME TO RAINMASTER</h5>
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<p style="color:var(--text-muted);margin-bottom:20px;font-size:13px;line-height:1.6;">
+					Rainmaster helps you visually design Rainmeter skins and export them as ready-to-use packages. Here's a quick tour:
+				</p>
+				<div class="tutorial-step">
+					<div class="step-num">1</div>
+					<div class="step-content">
+						<h6>Add Elements</h6>
+						<p>Use the <strong>left toolbar</strong> to add shapes, text, and images. Click any tool to place an element on the canvas.</p>
+					</div>
+				</div>
+				<div class="tutorial-step">
+					<div class="step-num">2</div>
+					<div class="step-content">
+						<h6>Edit Properties</h6>
+						<p>Select an element and use the <strong>right panel</strong> to change position, size, colors, fonts, and more. Everything updates in real-time.</p>
+					</div>
+				</div>
+				<div class="tutorial-step">
+					<div class="step-num">3</div>
+					<div class="step-content">
+						<h6>Organize with Layers</h6>
+						<p>Switch to the <strong>Layers tab</strong> to reorder elements, toggle visibility, or lock them in place.</p>
+					</div>
+				</div>
+				<div class="tutorial-step">
+					<div class="step-num">4</div>
+					<div class="step-content">
+						<h6>Add Measures & Variables</h6>
+						<p>Use the <strong>Measures</strong> and <strong>Vars</strong> tabs to add dynamic data. Reference variables with <kbd>#varName#</kbd> in any property.</p>
+					</div>
+				</div>
+				<div class="tutorial-step">
+					<div class="step-num">5</div>
+					<div class="step-content">
+						<h6>Upload Images</h6>
+						<p>For image meters, use the <strong>file upload</strong> in properties. Images are stored locally and exported to the <kbd>@Resources</kbd> folder.</p>
+					</div>
+				</div>
+				<div class="tutorial-step">
+					<div class="step-num">6</div>
+					<div class="step-content">
+						<h6>Export Your Skin</h6>
+						<p>Click <strong>Export</strong> to download a <kbd>.zip</kbd> file containing your <kbd>.ini</kbd> and all images in the correct folder structure.</p>
+					</div>
+				</div>
+				<div class="tutorial-step">
+					<div class="step-num">⌨</div>
+					<div class="step-content">
+						<h6>Keyboard Shortcuts</h6>
+						<p>
+							<kbd>Ctrl</kbd>+<kbd>N</kbd> New &nbsp;•&nbsp;
+							<kbd>Ctrl</kbd>+<kbd>S</kbd> Save &nbsp;•&nbsp;
+							<kbd>Ctrl</kbd>+<kbd>Z</kbd> Undo &nbsp;•&nbsp;
+							<kbd>Ctrl</kbd>+<kbd>D</kbd> Duplicate<br>
+							<kbd>Del</kbd> Delete &nbsp;•&nbsp;
+							<kbd>Arrows</kbd> Nudge (hold <kbd>Shift</kbd> for 10px) &nbsp;•&nbsp;
+							<kbd>P</kbd> Preview mode
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<label style="margin-right:auto;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);font-family:var(--font-mono);letter-spacing:1px;">
+					<input type="checkbox" id="dontShowAgain"> DON'T SHOW AGAIN
+				</label>
+				<button type="button" class="btn-tool primary" data-dismiss="modal">GOT IT</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- SKIN MANAGER MODAL -->
+<div class="modal fade" id="skinManagerModal" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fas fa-folder-open"></i> SKIN LIBRARY</h5>
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<div class="skin-list" id="skinList"></div>
+				<div class="empty-state" id="emptySkins" style="display:none;">
+					<i class="fas fa-folder"></i>
+					<div class="empty-title">NO SAVED SKINS</div>
+					<div style="font-size:11px;">Click "SAVE" to save your current skin to the library</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn-tool" data-dismiss="modal">CLOSE</button>
+				<button type="button" class="btn-tool primary" id="btnNewFromManager">
+					<i class="fas fa-plus"></i> NEW SKIN
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- GENERATE CODE MODAL -->
+<div class="modal fade" id="codeModal" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fas fa-code"></i> GENERATED INI</h5>
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<pre class="code-output" id="codeOutput"></pre>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn-tool" id="btnCopyCode">
+					<i class="fas fa-copy"></i> COPY
+				</button>
+				<button type="button" class="btn-tool success" id="btnDownloadFromModal">
+					<i class="fas fa-download"></i> DOWNLOAD ZIP
+				</button>
+				<button type="button" class="btn-tool" data-dismiss="modal">CLOSE</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- SKIN SETTINGS MODAL -->
+<div class="modal fade" id="skinSettingsModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fas fa-cog"></i> SKIN SETTINGS</h5>
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			</div>
+			<div class="modal-body">
+				<div class="spec-row">
+					<label>NAME</label>
+					<div class="input-wrap"><input type="text" class="prop-input" id="skinNameInput" value="MySkin"></div>
+				</div>
+				<div class="spec-row">
+					<label>AUTHOR</label>
+					<div class="input-wrap"><input type="text" class="prop-input" id="skinAuthorInput" value=""></div>
+				</div>
+				<div class="spec-row">
+					<label>INFO</label>
+					<div class="input-wrap"><input type="text" class="prop-input" id="skinInfoInput" value=""></div>
+				</div>
+				<div class="spec-row-2">
+					<div class="mini">
+						<label>W</label>
+						<input type="number" class="prop-input" id="skinWInput" value="400" min="1">
+					</div>
+					<div class="mini">
+						<label>H</label>
+						<input type="number" class="prop-input" id="skinHInput" value="400" min="1">
+					</div>
+				</div>
+				<div class="spec-row">
+					<label>UPDATE</label>
+					<div class="input-wrap"><input type="number" class="prop-input" id="skinUpdateInput" value="1000" min="-1"></div>
+				</div>
+				<div class="spec-row">
+					<label>BG COLOR</label>
+					<div class="input-wrap" style="display:flex;gap:6px;">
+						<input type="color" class="prop-input" id="skinBgInput" value="#000000" style="width:60px;">
+						<input type="number" class="prop-input" id="skinBgAlphaInput" value="0" min="0" max="255" style="width:80px;" title="Alpha (0-255)">
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn-tool" data-dismiss="modal">CANCEL</button>
+				<button type="button" class="btn-tool primary" id="btnApplySkinSettings">APPLY</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- MEASURE EDITOR MODAL -->
+<div class="modal fade" id="measureModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="fas fa-calculator"></i> <span id="measureModalTitle">ADD MEASURE</span></h5>
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			</div>
+			<div class="modal-body" id="measureModalBody"></div>
+			<div class="modal-footer">
+				<button type="button" class="btn-tool" data-dismiss="modal">CANCEL</button>
+				<button type="button" class="btn-tool primary" id="btnSaveMeasure">SAVE</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* =========================================================
+	 RAINMASTER - SKINS CREATOR
+	 Redesigned with industrial/technical UI aesthetic
+	 All functionality preserved
+	 ========================================================= */
+
+const App = (() => {
+	const STORAGE_KEY = 'rainmaster_data_v2';
+	const SETTINGS_KEY = 'rainmaster_settings_v2';
+
+	const state = {
+		currentSkinId: null,
+		skins: {},
+		settings: {
+			theme: 'dark',
+			tutorialShown: false,
+			grid: true,
+			snap: false,
+			gridSize: 10,
+			zoom: 1
+		},
+		selectedId: null,
+		nextId: 1,
+		undoStack: [],
+		redoStack: [],
+		drag: null,
+		resize: null,
+		activePanel: 'properties',
+		editingMeasureId: null
+	};
+
+	const meterCounters = { shape: 0, string: 0, image: 0 };
+
+	const $ = sel => document.querySelector(sel);
+	const $$ = sel => document.querySelectorAll(sel);
+
+	function uid() { return 'el_' + (state.nextId++); }
+	function uidMeasure() { return 'm_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5); }
+
+	function hexToRgb(hex) {
+		hex = String(hex).replace('#', '');
+		if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+		const n = parseInt(hex, 16);
+		return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+	}
+
+	function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+	function snapVal(v) {
+		if (!state.settings.snap) return v;
+		return Math.round(v / state.settings.gridSize) * state.settings.gridSize;
+	}
+
+	function toast(msg, type = '') {
+		const t = document.createElement('div');
+		t.className = 'app-toast ' + type;
+		t.textContent = msg;
+		$('#toastContainer').appendChild(t);
+		setTimeout(() => {
+			t.style.transition = 'opacity 0.3s';
+			t.style.opacity = '0';
+			setTimeout(() => t.remove(), 300);
+		}, 2200);
+	}
+
+	function escapeHtml(s) {
+		return String(s).replace(/[&<>"']/g, c => ({
+			'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+		}[c]));
+	}
+
+	// ---------- SKIN CRUD ----------
+	function createBlankSkin(name = 'MySkin') {
+		return {
+			id: 'skin_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+			name, author: '', info: '',
+			width: 400, height: 400, update: 1000,
+			bgColor: '#000000', bgAlpha: 0,
+			elements: [], measures: [], variables: [],
+			nextId: 1, createdAt: Date.now(), updatedAt: Date.now()
+		};
+	}
+
+	function getCurrentSkin() { return state.skins[state.currentSkinId]; }
+
+	function loadSkin(skinId) {
+		if (!state.skins[skinId]) return;
+		state.currentSkinId = skinId;
+		const skin = getCurrentSkin();
+		state.nextId = skin.nextId || 1;
+		state.selectedId = null;
+		state.undoStack = [];
+		state.redoStack = [];
+		meterCounters.shape = 0;
+		meterCounters.string = 0;
+		meterCounters.image = 0;
+		skin.elements.forEach(el => {
+			if (el.type === 'shape') meterCounters.shape++;
+			else if (el.type === 'string') meterCounters.string++;
+			else if (el.type === 'image') meterCounters.image++;
+		});
+		render();
+		toast('LOADED: ' + skin.name.toUpperCase(), 'success');
+	}
+
+	function saveCurrentSkin() {
+		const skin = getCurrentSkin();
+		if (!skin) return;
+		skin.nextId = state.nextId;
+		skin.updatedAt = Date.now();
+		persistData();
+		toast('SAVED: ' + skin.name.toUpperCase(), 'success');
+	}
+
+	function deleteSkin(skinId) {
+		if (!state.skins[skinId]) return;
+		const name = state.skins[skinId].name;
+		if (!confirm(`Delete skin "${name}"? This cannot be undone.`)) return;
+		delete state.skins[skinId];
+		if (state.currentSkinId === skinId) {
+			const ids = Object.keys(state.skins);
+			if (ids.length) loadSkin(ids[0]);
+			else {
+				const newSkin = createBlankSkin();
+				state.skins[newSkin.id] = newSkin;
+				loadSkin(newSkin.id);
+			}
+		}
+		persistData();
+		toast('DELETED: ' + name.toUpperCase(), 'warning');
+	}
+
+	function duplicateSkin(skinId) {
+		const orig = state.skins[skinId];
+		if (!orig) return;
+		const copy = JSON.parse(JSON.stringify(orig));
+		copy.id = 'skin_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+		copy.name = orig.name + '_COPY';
+		copy.createdAt = Date.now();
+		copy.updatedAt = Date.now();
+		state.skins[copy.id] = copy;
+		persistData();
+		toast('DUPLICATED: ' + orig.name.toUpperCase(), 'success');
+		renderSkinSelector();
+	}
+
+	function renameSkin(skinId) {
+		const skin = state.skins[skinId];
+		if (!skin) return;
+		const newName = prompt('New name:', skin.name);
+		if (newName && newName.trim()) {
+			skin.name = newName.trim();
+			skin.updatedAt = Date.now();
+			persistData();
+			render();
+			toast('RENAMED: ' + skin.name.toUpperCase(), 'success');
+		}
+	}
+
+	function persistData() {
+		try {
+			localStorage.setItem(STORAGE_KEY, JSON.stringify({
+				skins: state.skins,
+				currentSkinId: state.currentSkinId
+			}));
+			localStorage.setItem(SETTINGS_KEY, JSON.stringify(state.settings));
+		} catch (e) {
+			toast('SAVE FAILED: STORAGE FULL', 'error');
+		}
+	}
+
+	function loadData() {
+		try {
+			const raw = localStorage.getItem(STORAGE_KEY);
+			if (raw) {
+				const data = JSON.parse(raw);
+				state.skins = data.skins || {};
+				state.currentSkinId = data.currentSkinId;
+			}
+			const settingsRaw = localStorage.getItem(SETTINGS_KEY);
+			if (settingsRaw) Object.assign(state.settings, JSON.parse(settingsRaw));
+		} catch (e) { console.warn('Failed to load data', e); }
+
+		if (!Object.keys(state.skins).length) {
+			const newSkin = createBlankSkin();
+			state.skins[newSkin.id] = newSkin;
+			state.currentSkinId = newSkin.id;
+		}
+		if (!state.currentSkinId || !state.skins[state.currentSkinId]) {
+			state.currentSkinId = Object.keys(state.skins)[0];
+		}
+	}
+
+	// ---------- UNDO/REDO ----------
+	function pushUndo() {
+		const skin = getCurrentSkin();
+		if (!skin) return;
+		state.undoStack.push(JSON.stringify({
+			elements: skin.elements, measures: skin.measures,
+			variables: skin.variables, nextId: state.nextId
+		}));
+		if (state.undoStack.length > 50) state.undoStack.shift();
+		state.redoStack = [];
+	}
+
+	function undo() {
+		if (!state.undoStack.length) return;
+		const skin = getCurrentSkin();
+		state.redoStack.push(JSON.stringify({
+			elements: skin.elements, measures: skin.measures,
+			variables: skin.variables, nextId: state.nextId
+		}));
+		const prev = JSON.parse(state.undoStack.pop());
+		skin.elements = prev.elements;
+		skin.measures = prev.measures;
+		skin.variables = prev.variables;
+		state.nextId = prev.nextId;
+		state.selectedId = null;
+		render();
+		toast('UNDO', 'success');
+	}
+
+	function redo() {
+		if (!state.redoStack.length) return;
+		const skin = getCurrentSkin();
+		state.undoStack.push(JSON.stringify({
+			elements: skin.elements, measures: skin.measures,
+			variables: skin.variables, nextId: state.nextId
+		}));
+		const next = JSON.parse(state.redoStack.pop());
+		skin.elements = next.elements;
+		skin.measures = next.measures;
+		skin.variables = next.variables;
+		state.nextId = next.nextId;
+		state.selectedId = null;
+		render();
+		toast('REDO', 'success');
+	}
+
+	// ---------- ELEMENT CREATION ----------
+	function createElement(type, shape) {
+		pushUndo();
+		const skin = getCurrentSkin();
+		meterCounters[type] = (meterCounters[type] || 0) + 1;
+		const base = {
+			id: uid(), type,
+			name: (type === 'shape' ? 'MeterShape' : type === 'string' ? 'MeterString' : 'MeterImage') + meterCounters[type],
+			x: 50, y: 50, w: 100, h: 60,
+			fillColor: '#ffffff', fillAlpha: 255,
+			strokeColor: '#000000', strokeAlpha: 255, strokeWidth: 1,
+			rotation: 0, opacity: 255, visible: true, locked: false
+		};
+
+		if (type === 'shape') {
+			base.shape = shape || 'rectangle';
+			if (shape === 'line') {
+				base.w = 100; base.h = 2; base.strokeWidth = 2;
+				base.fillColor = '#000000'; base.fillAlpha = 0;
+			} else if (shape === 'ellipse') { base.w = 100; base.h = 100; }
+			else if (shape === 'rounded') { base.cornerRadius = 8; }
+		} else if (type === 'string') {
+			base.text = 'Sample Text'; base.fontSize = 14;
+			base.fontFamily = 'Segoe UI'; base.fontColor = '#ffffff';
+			base.fontAlpha = 255; base.fontWeight = 'normal';
+			base.italic = false; base.underline = false; base.align = 'left';
+			base.w = 150; base.h = 30;
+		} else if (type === 'image') {
+			base.src = ''; base.srcData = ''; base.srcFilename = '';
+			base.preserveAspect = true; base.w = 100; base.h = 100;
+		}
+
+		skin.elements.push(base);
+		state.selectedId = base.id;
+		render();
+		return base;
+	}
+
+	function getSelected() {
+		const skin = getCurrentSkin();
+		return skin.elements.find(e => e.id === state.selectedId);
+	}
+
+	function deleteSelected() {
+		if (!state.selectedId) return;
+		pushUndo();
+		const skin = getCurrentSkin();
+		skin.elements = skin.elements.filter(e => e.id !== state.selectedId);
+		state.selectedId = null;
+		render();
+	}
+
+	function duplicateSelected() {
+		const el = getSelected();
+		if (!el) return;
+		pushUndo();
+		const skin = getCurrentSkin();
+		const copy = JSON.parse(JSON.stringify(el));
+		meterCounters[copy.type]++;
+		copy.id = uid();
+		copy.name = copy.name + '_COPY';
+		copy.x += 20; copy.y += 20;
+		skin.elements.push(copy);
+		state.selectedId = copy.id;
+		render();
+	}
+
+	// ---------- RENDER ----------
+	function render() {
+		renderCanvas();
+		renderProperties();
+		renderLayers();
+		renderMeasures();
+		renderVariables();
+		updateCanvasLabel();
+		updateSkinSelector();
+		updateStatusBar();
+		updateAlignToolbar();
+	}
+
+	function updateCanvasLabel() {
+		const skin = getCurrentSkin();
+		$('#canvasLabel').textContent = `${skin.name.toUpperCase()} — ${skin.width} × ${skin.height}`;
+	}
+
+	function updateSkinSelector() {
+		const skin = getCurrentSkin();
+		$('#currentSkinName').textContent = skin.name.toUpperCase();
+	}
+
+	function updateStatusBar() {
+		const sel = getSelected();
+		const statusSel = $('#statusSelection span');
+		if (sel) {
+			statusSel.textContent = `${sel.name.toUpperCase()} (${Math.round(sel.x)}, ${Math.round(sel.y)}) ${sel.w}×${sel.h}`;
+		} else {
+			statusSel.textContent = 'NO SELECTION';
+		}
+	}
+
+	function renderCanvas() {
+		const skin = getCurrentSkin();
+		const canvas = $('#skinCanvas');
+		canvas.style.width = skin.width + 'px';
+		canvas.style.height = skin.height + 'px';
+		canvas.style.transform = `scale(${state.settings.zoom})`;
+
+		canvas.querySelectorAll('.el, .handles').forEach(n => n.remove());
+
+		skin.elements.forEach(el => {
+			const node = buildElementNode(el);
+			canvas.appendChild(node);
+		});
+
+		const sel = getSelected();
+		if (sel && !document.body.classList.contains('preview-mode')) {
+			const handles = buildHandles(sel);
+			canvas.appendChild(handles);
+		}
+	}
+
+	function buildElementNode(el) {
+		const div = document.createElement('div');
+		div.className = 'el';
+		div.dataset.id = el.id;
+		div.style.left = el.x + 'px';
+		div.style.top = el.y + 'px';
+		div.style.width = el.w + 'px';
+		div.style.height = el.h + 'px';
+		div.style.transform = el.rotation ? `rotate(${el.rotation}deg)` : '';
+		div.style.opacity = (el.opacity / 255) * (el.visible ? 1 : 0.3);
+
+		if (el.id === state.selectedId) div.classList.add('selected');
+		if (el.locked) div.classList.add('locked');
+		if (!el.visible) div.classList.add('hidden-el');
+
+		if (el.type === 'shape') {
+			const rgb = hexToRgb(el.fillColor);
+			const srgb = hexToRgb(el.strokeColor);
+			if (el.shape === 'rectangle') {
+				div.style.background = `rgba(${rgb.r},${rgb.g},${rgb.b},${el.fillAlpha/255})`;
+				div.style.border = `${el.strokeWidth}px solid rgba(${srgb.r},${srgb.g},${srgb.b},${el.strokeAlpha/255})`;
+			} else if (el.shape === 'rounded') {
+				div.style.background = `rgba(${rgb.r},${rgb.g},${rgb.b},${el.fillAlpha/255})`;
+				div.style.border = `${el.strokeWidth}px solid rgba(${srgb.r},${srgb.g},${srgb.b},${el.strokeAlpha/255})`;
+				div.style.borderRadius = (el.cornerRadius || 8) + 'px';
+			} else if (el.shape === 'ellipse') {
+				div.style.background = `rgba(${rgb.r},${rgb.g},${rgb.b},${el.fillAlpha/255})`;
+				div.style.border = `${el.strokeWidth}px solid rgba(${srgb.r},${srgb.g},${srgb.b},${el.strokeAlpha/255})`;
+				div.style.borderRadius = '50%';
+			} else if (el.shape === 'line') {
+				div.style.background = `rgba(${srgb.r},${srgb.g},${srgb.b},${el.strokeAlpha/255})`;
+				div.style.height = Math.max(1, el.strokeWidth) + 'px';
+				div.style.top = (el.y + el.h/2 - el.strokeWidth/2) + 'px';
+			}
+		} else if (el.type === 'string') {
+			div.classList.add('string-meter');
+			div.textContent = el.text;
+			div.style.color = el.fontColor;
+			div.style.fontSize = el.fontSize + 'px';
+			div.style.fontFamily = el.fontFamily;
+			div.style.fontWeight = el.fontWeight;
+			div.style.fontStyle = el.italic ? 'italic' : 'normal';
+			div.style.textDecoration = el.underline ? 'underline' : 'none';
+			const alignMap = { left: 'flex-start', center: 'center', right: 'flex-end' };
+			div.style.justifyContent = alignMap[el.align] || 'flex-start';
+		} else if (el.type === 'image') {
+			div.classList.add('image-meter');
+			if (el.srcData) {
+				div.style.backgroundImage = `url('${el.srcData}')`;
+				div.classList.add('has-image');
+			}
+		}
+		return div;
+	}
+
+	function buildHandles(el) {
+		const wrap = document.createElement('div');
+		wrap.className = 'handles';
+		wrap.style.left = el.x + 'px';
+		wrap.style.top = el.y + 'px';
+		wrap.style.width = el.w + 'px';
+		wrap.style.height = el.h + 'px';
+		wrap.style.transform = el.rotation ? `rotate(${el.rotation}deg)` : '';
+		['nw','n','ne','e','se','s','sw','w'].forEach(dir => {
+			const h = document.createElement('div');
+			h.className = 'handle ' + dir;
+			h.dataset.dir = dir;
+			wrap.appendChild(h);
+		});
+		return wrap;
+	}
+
+	// ---------- PROPERTIES PANEL ----------
+	function renderProperties() {
+		const el = getSelected();
+		const container = $('#propsContainer');
+		const empty = $('#emptyState');
+
+		if (!el) {
+			container.style.display = 'none';
+			empty.style.display = 'block';
+			return;
+		}
+		empty.style.display = 'none';
+		container.style.display = 'block';
+
+		const typeLabel = { shape: 'SHAPE', string: 'TEXT', image: 'IMAGE' }[el.type];
+		const shapeLabel = el.type === 'shape' ? ` / ${el.shape.toUpperCase()}` : '';
+
+		let html = '';
+
+		html += `<div class="panel-section">
+			<div class="panel-section-title"><span class="num">01</span>METER${shapeLabel}</div>
+			<div class="spec-row">
+				<label>NAME</label>
+				<div class="input-wrap"><input type="text" class="prop-input" data-prop="name" value="${escapeHtml(el.name)}"></div>
+			</div>
+		</div>`;
+
+		html += `<div class="panel-section">
+			<div class="panel-section-title"><span class="num">02</span>POSITION & SIZE</div>
+			<div class="spec-row-4">
+				<div class="mini"><label>X</label><input type="number" class="prop-input" data-prop="x" value="${Math.round(el.x)}"></div>
+				<div class="mini"><label>Y</label><input type="number" class="prop-input" data-prop="y" value="${Math.round(el.y)}"></div>
+				<div class="mini"><label>W</label><input type="number" class="prop-input" data-prop="w" value="${Math.round(el.w)}" min="1"></div>
+				<div class="mini"><label>H</label><input type="number" class="prop-input" data-prop="h" value="${Math.round(el.h)}" min="1"></div>
+			</div>
+			<div class="spec-row">
+				<label>ROTATE</label>
+				<div class="input-wrap" style="display:flex;gap:6px;">
+					<input type="number" class="prop-input" data-prop="rotation" value="${el.rotation}" min="-360" max="360">
+					<span style="color:var(--text-muted);font-size:10px;font-family:var(--font-mono);display:flex;align-items:center;">DEG</span>
+				</div>
+			</div>
+			<div class="spec-row">
+				<label>OPACITY</label>
+				<div class="input-wrap" style="display:flex;gap:8px;align-items:center;">
+					<input type="range" class="prop-input" data-prop="opacity" value="${el.opacity}" min="0" max="255" style="padding:0;flex:1;">
+					<span style="color:var(--orange);font-size:11px;font-family:var(--font-mono);width:32px;text-align:right;">${el.opacity}</span>
+				</div>
+			</div>
+		</div>`;
+
+		if (el.type === 'shape') {
+			html += `<div class="panel-section">
+				<div class="panel-section-title"><span class="num">03</span>SHAPE</div>
+				<div class="spec-row">
+					<label>TYPE</label>
+					<div class="input-wrap"><select class="prop-input" data-prop="shape">
+						<option value="rectangle" ${el.shape==='rectangle'?'selected':''}>RECTANGLE</option>
+						<option value="rounded" ${el.shape==='rounded'?'selected':''}>ROUNDED RECT</option>
+						<option value="ellipse" ${el.shape==='ellipse'?'selected':''}>ELLIPSE</option>
+						<option value="line" ${el.shape==='line'?'selected':''}>LINE</option>
+					</select></div>
+				</div>`;
+			if (el.shape === 'rounded') {
+				html += `<div class="spec-row">
+					<label>RADIUS</label>
+					<div class="input-wrap"><input type="number" class="prop-input" data-prop="cornerRadius" value="${el.cornerRadius || 8}" min="0" max="200"></div>
+				</div>`;
+			}
+			html += `</div>`;
+
+			if (el.shape !== 'line') {
+				html += `<div class="panel-section">
+					<div class="panel-section-title"><span class="num">04</span>FILL</div>
+					<div class="spec-row">
+						<label>COLOR</label>
+						<div class="input-wrap" style="display:flex;gap:6px;">
+							<input type="color" class="prop-input" data-prop="fillColor" value="${el.fillColor}" style="width:60px;">
+							<input type="number" class="prop-input" data-prop="fillAlpha" value="${el.fillAlpha}" min="0" max="255" title="Alpha 0-255">
+						</div>
+					</div>
+				</div>`;
+			}
+
+			html += `<div class="panel-section">
+				<div class="panel-section-title"><span class="num">05</span>STROKE</div>
+				<div class="spec-row">
+					<label>COLOR</label>
+					<div class="input-wrap" style="display:flex;gap:6px;">
+						<input type="color" class="prop-input" data-prop="strokeColor" value="${el.strokeColor}" style="width:60px;">
+						<input type="number" class="prop-input" data-prop="strokeAlpha" value="${el.strokeAlpha}" min="0" max="255" title="Alpha 0-255">
+					</div>
+				</div>
+				<div class="spec-row">
+					<label>WIDTH</label>
+					<div class="input-wrap"><input type="number" class="prop-input" data-prop="strokeWidth" value="${el.strokeWidth}" min="0" max="50"></div>
+				</div>
+			</div>`;
+		}
+
+		if (el.type === 'string') {
+			html += `<div class="panel-section">
+				<div class="panel-section-title"><span class="num">03</span>TEXT</div>
+				<div class="spec-row">
+					<label>CONTENT</label>
+					<div class="input-wrap"><input type="text" class="prop-input" data-prop="text" value="${escapeHtml(el.text)}"></div>
+				</div>
+				<div class="spec-row">
+					<label>FONT</label>
+					<div class="input-wrap"><input type="text" class="prop-input" data-prop="fontFamily" value="${escapeHtml(el.fontFamily)}"></div>
+				</div>
+				<div class="spec-row-2">
+					<div class="mini">
+						<label>SIZE</label>
+						<input type="number" class="prop-input" data-prop="fontSize" value="${el.fontSize}" min="1" max="200">
+					</div>
+					<div class="mini">
+						<label>COLOR</label>
+						<input type="color" class="prop-input" data-prop="fontColor" value="${el.fontColor}" style="width:100%;">
+					</div>
+				</div>
+				<div class="spec-row">
+					<label>ALPHA</label>
+					<div class="input-wrap"><input type="number" class="prop-input" data-prop="fontAlpha" value="${el.fontAlpha}" min="0" max="255"></div>
+				</div>
+				<div class="panel-section-title" style="margin-top:12px;"><span class="num">04</span>STYLE</div>
+				<div class="btn-row">
+					<button class="btn-toggle ${el.fontWeight==='bold'?'active':''}" data-toggle="fontWeight" data-val="bold"><i class="fas fa-bold"></i></button>
+					<button class="btn-toggle ${el.italic?'active':''}" data-toggle="italic"><i class="fas fa-italic"></i></button>
+					<button class="btn-toggle ${el.underline?'active':''}" data-toggle="underline"><i class="fas fa-underline"></i></button>
+				</div>
+				<div class="panel-section-title" style="margin-top:12px;"><span class="num">05</span>ALIGN</div>
+				<div class="btn-row">
+					<button class="btn-toggle ${el.align==='left'?'active':''}" data-toggle="align" data-val="left"><i class="fas fa-align-left"></i></button>
+					<button class="btn-toggle ${el.align==='center'?'active':''}" data-toggle="align" data-val="center"><i class="fas fa-align-center"></i></button>
+					<button class="btn-toggle ${el.align==='right'?'active':''}" data-toggle="align" data-val="right"><i class="fas fa-align-right"></i></button>
+				</div>
+			</div>`;
+		}
+
+		if (el.type === 'image') {
+			html += `<div class="panel-section">
+				<div class="panel-section-title"><span class="num">03</span>IMAGE SOURCE</div>
+				<div class="image-upload-area ${el.srcData ? 'has-image' : ''}" id="imageUploadArea">
+					${el.srcData
+						? `<img src="${el.srcData}" class="preview" alt="preview"><div style="margin-top:8px;font-size:10px;color:var(--text-muted);font-family:var(--font-mono);letter-spacing:1px;">${escapeHtml(el.srcFilename || 'UPLOADED IMAGE')}</div>`
+						: `<i class="fas fa-cloud-upload-alt"></i><div style="font-size:11px;color:var(--text);font-family:var(--font-mono);letter-spacing:1px;margin-top:4px;">CLICK TO UPLOAD</div><div style="font-size:9px;color:var(--text-muted);margin-top:4px;font-family:var(--font-mono);">SAVED TO @RESOURCES FOLDER</div>`
+					}
+				</div>
+				<input type="file" id="imageFileInput" accept="image/*" style="display:none;">
+				${el.srcData ? `<button class="btn-tool" id="btnRemoveImage" style="width:100%;margin-bottom:8px;"><i class="fas fa-times"></i> REMOVE IMAGE</button>` : ''}
+				<div class="spec-row">
+					<label>PATH</label>
+					<div class="input-wrap"><input type="text" class="prop-input" data-prop="src" value="${escapeHtml(el.src)}" placeholder="image.png"></div>
+				</div>
+				<div class="spec-row">
+					<label>ASPECT</label>
+					<div class="input-wrap"><select class="prop-input" data-prop="preserveAspect">
+						<option value="true" ${el.preserveAspect?'selected':''}>PRESERVE</option>
+						<option value="false" ${!el.preserveAspect?'selected':''}>STRETCH</option>
+					</select></div>
+				</div>
+			</div>`;
+		}
+
+		html += `<div class="panel-section">
+			<div class="panel-section-title"><span class="num">06</span>ACTIONS</div>
+			<div class="btn-row">
+				<button class="btn-tool" id="btnPropDuplicate"><i class="fas fa-clone"></i> CLONE</button>
+				<button class="btn-tool" id="btnPropDelete" style="color:var(--danger);"><i class="fas fa-trash"></i> DELETE</button>
+			</div>
+			<div class="btn-row" style="margin-top:6px;">
+				<button class="btn-tool" id="btnBringFront"><i class="fas fa-layer-group"></i> FRONT</button>
+				<button class="btn-tool" id="btnSendBack"><i class="fas fa-level-down-alt"></i> BACK</button>
+			</div>
+			<div class="btn-row" style="margin-top:6px;">
+				<button class="btn-tool ${el.locked?'active':''}" id="btnToggleLock">
+					<i class="fas fa-${el.locked?'lock':'unlock'}"></i> ${el.locked?'UNLOCK':'LOCK'}
+				</button>
+				<button class="btn-tool ${!el.visible?'active':''}" id="btnToggleVisible">
+					<i class="fas fa-${el.visible?'eye':'eye-slash'}"></i> ${el.visible?'HIDE':'SHOW'}
+				</button>
+			</div>
+		</div>`;
+
+		container.innerHTML = html;
+
+		container.querySelectorAll('[data-prop]').forEach(inp => {
+			const ev = (inp.type === 'range' || inp.type === 'color') ? 'input' : 'change';
+			inp.addEventListener(ev, e => {
+				const prop = inp.dataset.prop;
+				let val = inp.value;
+				const numProps = ['x','y','w','h','rotation','opacity','fillAlpha','strokeAlpha','strokeWidth','fontSize','fontAlpha','cornerRadius'];
+				if (numProps.includes(prop)) val = parseFloat(val) || 0;
+				if (prop === 'preserveAspect') val = val === 'true';
+				const el = getSelected();
+				if (!el) return;
+				pushUndo();
+				el[prop] = val;
+				render();
+			});
+		});
+
+		container.querySelectorAll('[data-toggle]').forEach(btn => {
+			btn.addEventListener('click', () => {
+				const prop = btn.dataset.toggle;
+				const val = btn.dataset.val;
+				const el = getSelected();
+				if (!el) return;
+				pushUndo();
+				if (val !== undefined) {
+					el[prop] = (el[prop] === val) ? (prop === 'fontWeight' ? 'normal' : false) : val;
+				} else {
+					el[prop] = !el[prop];
+				}
+				render();
+			});
+		});
+
+		const bd = $('#btnPropDelete'); if (bd) bd.onclick = deleteSelected;
+		const bu = $('#btnPropDuplicate'); if (bu) bu.onclick = duplicateSelected;
+		const bf = $('#btnBringFront');
+		if (bf) bf.onclick = () => {
+			const skin = getCurrentSkin();
+			const idx = skin.elements.findIndex(e => e.id === state.selectedId);
+			if (idx < 0) return;
+			pushUndo();
+			const [el] = skin.elements.splice(idx, 1);
+			skin.elements.push(el);
+			render();
+		};
+		const bb = $('#btnSendBack');
+		if (bb) bb.onclick = () => {
+			const skin = getCurrentSkin();
+			const idx = skin.elements.findIndex(e => e.id === state.selectedId);
+			if (idx < 0) return;
+			pushUndo();
+			const [el] = skin.elements.splice(idx, 1);
+			skin.elements.unshift(el);
+			render();
+		};
+		const bl = $('#btnToggleLock');
+		if (bl) bl.onclick = () => {
+			const el = getSelected();
+			if (!el) return;
+			pushUndo();
+			el.locked = !el.locked;
+			render();
+		};
+		const bv = $('#btnToggleVisible');
+		if (bv) bv.onclick = () => {
+			const el = getSelected();
+			if (!el) return;
+			pushUndo();
+			el.visible = !el.visible;
+			render();
+		};
+
+		if (el.type === 'image') {
+			const uploadArea = $('#imageUploadArea');
+			const fileInput = $('#imageFileInput');
+			if (uploadArea) uploadArea.onclick = () => fileInput.click();
+			if (fileInput) {
+				fileInput.onchange = (e) => {
+					const file = e.target.files[0];
+					if (!file) return;
+					const reader = new FileReader();
+					reader.onload = (ev) => {
+						pushUndo();
+						el.srcData = ev.target.result;
+						el.srcFilename = file.name;
+						if (!el.src) el.src = file.name;
+						render();
+						toast('IMAGE UPLOADED: ' + file.name.toUpperCase(), 'success');
+					};
+					reader.readAsDataURL(file);
+				};
+			}
+			const btnRemove = $('#btnRemoveImage');
+			if (btnRemove) {
+				btnRemove.onclick = () => {
+					pushUndo();
+					el.srcData = '';
+					el.srcFilename = '';
+					render();
+				};
+			}
+		}
+	}
+
+	// ---------- LAYERS PANEL ----------
+	function renderLayers() {
+		const skin = getCurrentSkin();
+		const list = $('#layersList');
+		$('#layerCount').textContent = skin.elements.length + ' ITEMS';
+		if (!skin.elements.length) {
+			list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;font-size:11px;font-family:var(--font-mono);letter-spacing:1px;">NO ELEMENTS YET</div>';
+			return;
+		}
+		let html = '';
+		for (let i = skin.elements.length - 1; i >= 0; i--) {
+			const el = skin.elements[i];
+			const icon = el.type === 'shape' ? (el.shape === 'ellipse' ? 'far fa-circle' : el.shape === 'line' ? 'fas fa-minus' : 'fas fa-square')
+								 : el.type === 'string' ? 'fas fa-font' : 'fas fa-image';
+			html += `<div class="layer-item ${el.id === state.selectedId ? 'selected' : ''}" data-id="${el.id}">
+				<span class="layer-num">${String(skin.elements.length - i).padStart(2, '0')}</span>
+				<i class="${icon}"></i>
+				<span class="layer-name">${escapeHtml(el.name.toUpperCase())}</span>
+				<div class="layer-actions">
+					<button data-action="visible" title="${el.visible ? 'Hide' : 'Show'}"><i class="fas fa-${el.visible ? 'eye' : 'eye-slash'}"></i></button>
+					<button data-action="lock" title="${el.locked ? 'Unlock' : 'Lock'}"><i class="fas fa-${el.locked ? 'lock' : 'unlock'}"></i></button>
+					<button data-action="delete" title="Delete"><i class="fas fa-trash"></i></button>
+				</div>
+			</div>`;
+		}
+		list.innerHTML = html;
+
+		list.querySelectorAll('.layer-item').forEach(item => {
+			item.addEventListener('click', (e) => {
+				if (e.target.closest('.layer-actions')) return;
+				state.selectedId = item.dataset.id;
+				render();
+			});
+			item.querySelectorAll('.layer-actions button').forEach(btn => {
+				btn.addEventListener('click', (e) => {
+					e.stopPropagation();
+					const el = skin.elements.find(x => x.id === item.dataset.id);
+					if (!el) return;
+					pushUndo();
+					const action = btn.dataset.action;
+					if (action === 'visible') el.visible = !el.visible;
+					else if (action === 'lock') el.locked = !el.locked;
+					else if (action === 'delete') {
+						skin.elements = skin.elements.filter(x => x.id !== el.id);
+						if (state.selectedId === el.id) state.selectedId = null;
+					}
+					render();
+				});
+			});
+		});
+	}
+
+	// ---------- MEASURES PANEL ----------
+	function renderMeasures() {
+		const skin = getCurrentSkin();
+		const list = $('#measuresList');
+		const empty = $('#emptyMeasures');
+		if (!skin.measures.length) {
+			list.innerHTML = '';
+			empty.style.display = 'block';
+			return;
+		}
+		empty.style.display = 'none';
+		let html = '';
+		skin.measures.forEach(m => {
+			html += `<div class="measure-item">
+				<div class="measure-item-header">
+					<span class="name">${escapeHtml(m.name.toUpperCase())}</span>
+					<div>
+						<button data-edit="${m.id}" title="Edit"><i class="fas fa-edit"></i></button>
+						<button data-delete="${m.id}" title="Delete"><i class="fas fa-trash"></i></button>
+					</div>
+				</div>
+				<div class="type-tag">TYPE: ${m.measureType.toUpperCase()}</div>
+			</div>`;
+		});
+		list.innerHTML = html;
+
+		list.querySelectorAll('[data-edit]').forEach(btn => {
+			btn.onclick = () => openMeasureEditor(btn.dataset.edit);
+		});
+		list.querySelectorAll('[data-delete]').forEach(btn => {
+			btn.onclick = () => {
+				if (!confirm('Delete this measure?')) return;
+				pushUndo();
+				skin.measures = skin.measures.filter(m => m.id !== btn.dataset.delete);
+				render();
+			};
+		});
+	}
+
+	function openMeasureEditor(measureId = null) {
+		const skin = getCurrentSkin();
+		const m = measureId ? skin.measures.find(x => x.id === measureId) : null;
+		state.editingMeasureId = measureId;
+		$('#measureModalTitle').textContent = m ? 'EDIT MEASURE' : 'ADD MEASURE';
+
+		const body = $('#measureModalBody');
+		body.innerHTML = `
+			<div class="spec-row">
+				<label>NAME</label>
+				<div class="input-wrap"><input type="text" class="prop-input" id="measureName" value="${m ? escapeHtml(m.name) : 'MeasureCalc'}"></div>
+			</div>
+			<div class="spec-row">
+				<label>TYPE</label>
+				<div class="input-wrap"><select class="prop-input" id="measureType">
+					<option value="Calc" ${m && m.measureType==='Calc'?'selected':''}>CALC</option>
+					<option value="String" ${m && m.measureType==='String'?'selected':''}>STRING</option>
+					<option value="Plugin" ${m && m.measureType==='Plugin'?'selected':''}>PLUGIN</option>
+					<option value="UpTime" ${m && m.measureType==='UpTime'?'selected':''}>UPTIME</option>
+					<option value="CPU" ${m && m.measureType==='CPU'?'selected':''}>CPU</option>
+					<option value="Memory" ${m && m.measureType==='Memory'?'selected':''}>MEMORY</option>
+					<option value="NetIn" ${m && m.measureType==='NetIn'?'selected':''}>NETIN</option>
+					<option value="NetOut" ${m && m.measureType==='NetOut'?'selected':''}>NETOUT</option>
+					<option value="Time" ${m && m.measureType==='Time'?'selected':''}>TIME</option>
+					<option value="Quote" ${m && m.measureType==='Quote'?'selected':''}>QUOTE</option>
+					<option value="Loop" ${m && m.measureType==='Loop'?'selected':''}>LOOP</option>
+				</select></div>
+			</div>
+			<div class="spec-row">
+				<label>FORMULA</label>
+				<div class="input-wrap"><input type="text" class="prop-input" id="measureFormula" value="${m ? escapeHtml(m.formula || '') : ''}" placeholder="e.g. Counter+1"></div>
+			</div>
+			<div class="spec-row">
+				<label>UPDATE</label>
+				<div class="input-wrap"><input type="number" class="prop-input" id="measureUpdate" value="${m ? m.updateDivider || -1 : -1}" min="-1"></div>
+			</div>
+		`;
+		$('#measureModal').modal('show');
+	}
+
+	function saveMeasureFromModal() {
+		const skin = getCurrentSkin();
+		const name = $('#measureName').value.trim();
+		const type = $('#measureType').value;
+		const formula = $('#measureFormula').value;
+		const update = parseInt($('#measureUpdate').value) || -1;
+
+		if (!name) { toast('MEASURE NAME REQUIRED', 'error'); return; }
+
+		pushUndo();
+		if (state.editingMeasureId) {
+			const m = skin.measures.find(x => x.id === state.editingMeasureId);
+			if (m) { m.name = name; m.measureType = type; m.formula = formula; m.updateDivider = update; }
+		} else {
+			skin.measures.push({ id: uidMeasure(), name, measureType: type, formula, updateDivider: update });
+		}
+		$('#measureModal').modal('hide');
+		render();
+		toast('MEASURE SAVED', 'success');
+	}
+
+	// ---------- VARIABLES PANEL ----------
+	function renderVariables() {
+		const skin = getCurrentSkin();
+		const list = $('#variablesList');
+		const empty = $('#emptyVariables');
+		if (!skin.variables.length) {
+			list.innerHTML = '';
+			empty.style.display = 'block';
+			return;
+		}
+		empty.style.display = 'none';
+		let html = '';
+		skin.variables.forEach((v, i) => {
+			html += `<div class="var-item">
+				<input type="text" class="prop-input" data-var-name="${i}" value="${escapeHtml(v.name)}" placeholder="name">
+				<input type="text" class="prop-input" data-var-value="${i}" value="${escapeHtml(v.value)}" placeholder="value">
+				<button data-var-delete="${i}"><i class="fas fa-times"></i></button>
+			</div>`;
+		});
+		list.innerHTML = html;
+
+		list.querySelectorAll('[data-var-name]').forEach(inp => {
+			inp.onchange = () => { pushUndo(); skin.variables[parseInt(inp.dataset.varName)].name = inp.value; };
+		});
+		list.querySelectorAll('[data-var-value]').forEach(inp => {
+			inp.onchange = () => { pushUndo(); skin.variables[parseInt(inp.dataset.varValue)].value = inp.value; };
+		});
+		list.querySelectorAll('[data-var-delete]').forEach(btn => {
+			btn.onclick = () => { pushUndo(); skin.variables.splice(parseInt(btn.dataset.varDelete), 1); render(); };
+		});
+	}
+
+	function updateAlignToolbar() {
+		const toolbar = $('#alignToolbar');
+		if (state.selectedId) toolbar.classList.add('show');
+		else toolbar.classList.remove('show');
+	}
+
+	function alignSelected(direction) {
+		const el = getSelected();
+		if (!el) return;
+		const skin = getCurrentSkin();
+		pushUndo();
+		switch (direction) {
+			case 'left': el.x = 0; break;
+			case 'right': el.x = skin.width - el.w; break;
+			case 'center': el.x = (skin.width - el.w) / 2; break;
+			case 'top': el.y = 0; break;
+			case 'bottom': el.y = skin.height - el.h; break;
+			case 'middle': el.y = (skin.height - el.h) / 2; break;
+		}
+		render();
+	}
+
+	// ---------- INTERACTIONS ----------
+	function setupInteractions() {
+		const canvas = $('#skinCanvas');
+
+		canvas.addEventListener('mousedown', e => {
+			if (document.body.classList.contains('preview-mode')) return;
+			const handle = e.target.closest('.handle');
+			if (handle) { startResize(handle.dataset.dir, e); e.stopPropagation(); return; }
+			const node = e.target.closest('.el');
+			if (node) {
+				const el = getCurrentSkin().elements.find(x => x.id === node.dataset.id);
+				if (el && el.locked) { toast('ELEMENT LOCKED', 'warning'); return; }
+				state.selectedId = node.dataset.id;
+				startDrag(e);
+				render();
+				e.stopPropagation();
+			} else {
+				state.selectedId = null;
+				render();
+			}
+		});
+
+		canvas.addEventListener('contextmenu', e => {
+			e.preventDefault();
+			const node = e.target.closest('.el');
+			if (node) {
+				state.selectedId = node.dataset.id;
+				render();
+				showContextMenu(e.clientX, e.clientY);
+			}
+		});
+
+		document.addEventListener('mousemove', e => {
+			const canvasRect = $('#skinCanvas').getBoundingClientRect();
+			const zoom = state.settings.zoom;
+			const x = Math.round((e.clientX - canvasRect.left) / zoom);
+			const y = Math.round((e.clientY - canvasRect.top) / zoom);
+			$('#statusMouse span').textContent = `X: ${x} Y: ${y}`;
+			if (state.drag) doDrag(e);
+			if (state.resize) doResize(e);
+		});
+
+		document.addEventListener('mouseup', () => {
+			state.drag = null;
+			state.resize = null;
+		});
+
+		document.addEventListener('click', () => {
+			$('#contextMenu').classList.remove('show');
+		});
+
+		$$('#contextMenu .context-menu-item').forEach(item => {
+			item.addEventListener('click', () => {
+				const action = item.dataset.action;
+				const el = getSelected();
+				if (!el) return;
+				const skin = getCurrentSkin();
+				pushUndo();
+				switch (action) {
+					case 'duplicate': duplicateSelected(); break;
+					case 'delete': deleteSelected(); break;
+					case 'front':
+						const idx = skin.elements.findIndex(x => x.id === el.id);
+						skin.elements.splice(idx, 1);
+						skin.elements.push(el);
+						render();
+						break;
+					case 'back':
+						const idx2 = skin.elements.findIndex(x => x.id === el.id);
+						skin.elements.splice(idx2, 1);
+						skin.elements.unshift(el);
+						render();
+						break;
+					case 'lock': el.locked = !el.locked; render(); break;
+					case 'hide': el.visible = !el.visible; render(); break;
+				}
+			});
+		});
+
+		document.addEventListener('keydown', e => {
+			if (e.target.matches('input, textarea, select')) return;
+			const el = getSelected();
+			const step = e.shiftKey ? 10 : 1;
+
+			if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+				e.preventDefault();
+				if (e.shiftKey) redo(); else undo();
+			} else if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+				e.preventDefault();
+				redo();
+			} else if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+				e.preventDefault();
+				saveCurrentSkin();
+			} else if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+				e.preventDefault();
+				newSkin();
+			} else if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+				e.preventDefault();
+				const skin = getCurrentSkin();
+				if (skin.elements.length) { state.selectedId = skin.elements[0].id; render(); }
+			} else if (e.key === 'Delete' || e.key === 'Backspace') {
+				deleteSelected();
+				e.preventDefault();
+			} else if (e.key === 'p' || e.key === 'P') {
+				togglePreview();
+			} else if (el && !el.locked) {
+				if (e.key === 'ArrowLeft') { pushUndo(); el.x -= step; render(); e.preventDefault(); }
+				else if (e.key === 'ArrowRight') { pushUndo(); el.x += step; render(); e.preventDefault(); }
+				else if (e.key === 'ArrowUp') { pushUndo(); el.y -= step; render(); e.preventDefault(); }
+				else if (e.key === 'ArrowDown') { pushUndo(); el.y += step; render(); e.preventDefault(); }
+			}
+			if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+				duplicateSelected();
+				e.preventDefault();
+			}
+		});
+
+		$$('.tool-btn[data-add]').forEach(btn => {
+			btn.addEventListener('click', () => {
+				const type = btn.dataset.add;
+				if (type === 'string' || type === 'image') createElement(type);
+				else if (type === 'rounded') createElement('shape', 'rounded');
+				else createElement('shape', type);
+			});
+		});
+
+		$('#btnDelete').onclick = deleteSelected;
+		$('#btnDuplicate').onclick = duplicateSelected;
+		$('#btnSelectAll').onclick = () => {
+			const skin = getCurrentSkin();
+			if (skin.elements.length) { state.selectedId = skin.elements[0].id; render(); }
+		};
+
+		$('#btnGrid').onclick = () => {
+			state.settings.grid = !state.settings.grid;
+			$('#skinCanvas').classList.toggle('show-grid', state.settings.grid);
+			$('#btnGrid').classList.toggle('active', state.settings.grid);
+			persistData();
+		};
+		$('#btnSnap').onclick = () => {
+			state.settings.snap = !state.settings.snap;
+			$('#btnSnap').classList.toggle('active', state.settings.snap);
+			toast('SNAP TO GRID: ' + (state.settings.snap ? 'ON' : 'OFF'));
+			persistData();
+		};
+		$('#btnPreview').onclick = togglePreview;
+
+		$$('#alignToolbar button').forEach(btn => {
+			btn.addEventListener('click', () => alignSelected(btn.dataset.align));
+		});
+
+		$('#btnZoomIn').onclick = () => setZoom(state.settings.zoom + 0.1);
+		$('#btnZoomOut').onclick = () => setZoom(state.settings.zoom - 0.1);
+		$('#btnZoomReset').onclick = () => setZoom(1);
+
+		$('#btnNew').onclick = newSkin;
+		$('#btnSkinSettings').onclick = openSkinSettings;
+		$('#btnSaveSkin').onclick = saveCurrentSkin;
+		$('#btnUndo').onclick = undo;
+		$('#btnRedo').onclick = redo;
+
+		$('#btnApplySkinSettings').onclick = applySkinSettings;
+
+		$('#btnGenerate').onclick = () => {
+			const code = generateINI();
+			$('#codeOutput').textContent = code;
+			$('#codeModal').modal('show');
+		};
+		$('#btnExport').onclick = exportSkin;
+		$('#btnCopyCode').onclick = copyCode;
+		$('#btnDownloadFromModal').onclick = exportSkin;
+
+		$('#skinSelector').onclick = openSkinManager;
+		$('#btnNewFromManager').onclick = () => {
+			$('#skinManagerModal').modal('hide');
+			newSkin();
+		};
+
+		$('#btnAddMeasure').onclick = () => openMeasureEditor();
+		$('#btnSaveMeasure').onclick = saveMeasureFromModal;
+
+		$('#btnAddVariable').onclick = () => {
+			const skin = getCurrentSkin();
+			pushUndo();
+			skin.variables.push({ name: 'newVar', value: '0' });
+			render();
+		};
+
+		$$('.panel-tab').forEach(tab => {
+			tab.addEventListener('click', () => {
+				$$('.panel-tab').forEach(t => t.classList.remove('active'));
+				tab.classList.add('active');
+				const panel = tab.dataset.panel;
+				state.activePanel = panel;
+				$('#propertiesPanel').style.display = panel === 'properties' ? 'block' : 'none';
+				$('#layersPanel').style.display = panel === 'layers' ? 'block' : 'none';
+				$('#measuresPanel').style.display = panel === 'measures' ? 'block' : 'none';
+				$('#variablesPanel').style.display = panel === 'variables' ? 'block' : 'none';
+			});
+		});
+
+		$$('[data-theme]').forEach(btn => {
+			btn.addEventListener('click', () => setTheme(btn.dataset.theme));
+		});
+
+		$('#helpFab').onclick = () => {
+			$('#dontShowAgain').checked = true;
+			$('#tutorialModal').modal('show');
+		};
+		$('#tutorialModal').on('hidden.bs.modal', () => {
+			if ($('#dontShowAgain').checked) {
+				state.settings.tutorialShown = true;
+				persistData();
+			}
+		});
+	}
+
+	function showContextMenu(x, y) {
+		const menu = $('#contextMenu');
+		menu.style.left = x + 'px';
+		menu.style.top = y + 'px';
+		menu.classList.add('show');
+		const el = getSelected();
+		if (el) {
+			menu.querySelector('[data-action="lock"]').innerHTML = `<i class="fas fa-${el.locked?'unlock':'lock'}"></i> ${el.locked?'UNLOCK':'LOCK'}`;
+			menu.querySelector('[data-action="hide"]').innerHTML = `<i class="fas fa-${el.visible?'eye-slash':'eye'}"></i> ${el.visible?'HIDE':'SHOW'}`;
+		}
+	}
+
+	function togglePreview() {
+		document.body.classList.toggle('preview-mode');
+		const isPreview = document.body.classList.contains('preview-mode');
+		$('#btnPreview').classList.toggle('active', isPreview);
+		toast(isPreview ? 'PREVIEW MODE ON' : 'PREVIEW MODE OFF');
+		render();
+	}
+
+	function setZoom(z) {
+		state.settings.zoom = clamp(z, 0.25, 3);
+		$('#zoomLevel').textContent = Math.round(state.settings.zoom * 100) + '%';
+		persistData();
+		render();
+	}
+
+	function setTheme(theme) {
+		state.settings.theme = theme;
+		document.body.className = 'theme-' + theme;
+		$$('[data-theme]').forEach(b => b.classList.toggle('active', b.dataset.theme === theme));
+		persistData();
+	}
+
+	function newSkin() {
+		const skin = getCurrentSkin();
+		if (skin.elements.length || skin.measures.length || skin.variables.length) {
+			if (!confirm('Create a new skin? Unsaved changes will remain in the library.')) return;
+		}
+		const newSkinObj = createBlankSkin();
+		state.skins[newSkinObj.id] = newSkinObj;
+		loadSkin(newSkinObj.id);
+		persistData();
+		renderSkinSelector();
+		toast('NEW SKIN CREATED', 'success');
+	}
+
+	function openSkinSettings() {
+		const skin = getCurrentSkin();
+		$('#skinNameInput').value = skin.name;
+		$('#skinAuthorInput').value = skin.author;
+		$('#skinInfoInput').value = skin.info;
+		$('#skinWInput').value = skin.width;
+		$('#skinHInput').value = skin.height;
+		$('#skinUpdateInput').value = skin.update;
+		$('#skinBgInput').value = skin.bgColor;
+		$('#skinBgAlphaInput').value = skin.bgAlpha;
+		$('#skinSettingsModal').modal('show');
+	}
+
+	function applySkinSettings() {
+		const skin = getCurrentSkin();
+		pushUndo();
+		skin.name = $('#skinNameInput').value || 'MySkin';
+		skin.author = $('#skinAuthorInput').value;
+		skin.info = $('#skinInfoInput').value;
+		skin.width = parseInt($('#skinWInput').value) || 400;
+		skin.height = parseInt($('#skinHInput').value) || 400;
+		skin.update = parseInt($('#skinUpdateInput').value) || 1000;
+		skin.bgColor = $('#skinBgInput').value;
+		skin.bgAlpha = parseInt($('#skinBgAlphaInput').value) || 0;
+		$('#skinSettingsModal').modal('hide');
+		persistData();
+		render();
+		toast('SKIN SETTINGS APPLIED', 'success');
+	}
+
+	function openSkinManager() {
+		renderSkinList();
+		$('#skinManagerModal').modal('show');
+	}
+
+	function renderSkinList() {
+		const list = $('#skinList');
+		const empty = $('#emptySkins');
+		const ids = Object.keys(state.skins);
+		if (!ids.length) {
+			list.innerHTML = '';
+			empty.style.display = 'block';
+			return;
+		}
+		empty.style.display = 'none';
+		let html = '';
+		ids.forEach(id => {
+			const s = state.skins[id];
+			const isCurrent = id === state.currentSkinId;
+			const date = new Date(s.updatedAt).toLocaleDateString();
+			html += `<div class="skin-list-item ${isCurrent ? 'current' : ''}">
+				<div class="skin-icon"><i class="fas fa-cloud-rain"></i></div>
+				<div class="skin-info">
+					<div class="name">${escapeHtml(s.name.toUpperCase())} ${isCurrent ? '<span style="color:var(--orange);font-size:9px;">(CURRENT)</span>' : ''}</div>
+					<div class="meta">${s.elements.length} ELEMENTS • ${s.measures.length} MEASURES • ${date}</div>
+				</div>
+				<div class="skin-actions">
+					${!isCurrent ? `<button data-load="${id}">OPEN</button>` : ''}
+					<button data-rename="${id}"><i class="fas fa-edit"></i></button>
+					<button data-duplicate="${id}"><i class="fas fa-clone"></i></button>
+					<button data-delete="${id}" class="danger"><i class="fas fa-trash"></i></button>
+				</div>
+			</div>`;
+		});
+		list.innerHTML = html;
+
+		list.querySelectorAll('[data-load]').forEach(b => b.onclick = () => { loadSkin(b.dataset.load); $('#skinManagerModal').modal('hide'); });
+		list.querySelectorAll('[data-rename]').forEach(b => b.onclick = () => { renameSkin(b.dataset.rename); renderSkinList(); });
+		list.querySelectorAll('[data-duplicate]').forEach(b => b.onclick = () => { duplicateSkin(b.dataset.duplicate); renderSkinList(); });
+		list.querySelectorAll('[data-delete]').forEach(b => b.onclick = () => { deleteSkin(b.dataset.delete); renderSkinList(); });
+	}
+
+	function renderSkinSelector() { updateSkinSelector(); }
+
+	function startDrag(e) {
+		const el = getSelected();
+		if (!el) return;
+		state.drag = { startX: e.clientX, startY: e.clientY, origX: el.x, origY: el.y };
+		pushUndo();
+	}
+	function doDrag(e) {
+		const el = getSelected();
+		if (!el || !state.drag) return;
+		const zoom = state.settings.zoom;
+		const dx = (e.clientX - state.drag.startX) / zoom;
+		const dy = (e.clientY - state.drag.startY) / zoom;
+		el.x = snapVal(state.drag.origX + dx);
+		el.y = snapVal(state.drag.origY + dy);
+		render();
+	}
+
+	function startResize(dir, e) {
+		const el = getSelected();
+		if (!el) return;
+		state.resize = { dir, startX: e.clientX, startY: e.clientY, origX: el.x, origY: el.y, origW: el.w, origH: el.h };
+		pushUndo();
+	}
+	function doResize(e) {
+		const el = getSelected();
+		if (!el || !state.resize) return;
+		const r = state.resize;
+		const zoom = state.settings.zoom;
+		const dx = (e.clientX - r.startX) / zoom;
+		const dy = (e.clientY - r.startY) / zoom;
+		const dir = r.dir;
+		let x = r.origX, y = r.origY, w = r.origW, h = r.origH;
+		if (dir.includes('e')) w = r.origW + dx;
+		if (dir.includes('w')) { w = r.origW - dx; x = r.origX + dx; }
+		if (dir.includes('s')) h = r.origH + dy;
+		if (dir.includes('n')) { h = r.origH - dy; y = r.origY + dy; }
+		if (w < 2) { w = 2; if (dir.includes('w')) x = r.origX + r.origW - 2; }
+		if (h < 2) { h = 2; if (dir.includes('n')) y = r.origY + r.origH - 2; }
+		el.x = snapVal(x); el.y = snapVal(y); el.w = snapVal(w); el.h = snapVal(h);
+		render();
+	}
+
+	function generateINI() {
+		const skin = getCurrentSkin();
+		const bgRgb = hexToRgb(skin.bgColor);
+		let out = '';
+		out += `; -------------------------------------------\n`;
+		out += `; ${skin.name}${skin.author ? ' by ' + skin.author : ''}\n`;
+		out += `; Created with Rainmaster - Skins Creator\n`;
+		out += `; -------------------------------------------\n\n`;
+		out += `[Rainmeter]\n`;
+		out += `Update=${skin.update}\n`;
+		out += `AccurateText=1\n`;
+		out += `DynamicWindowSize=1\n`;
+		out += `Author=${skin.author || 'Unknown'}\n`;
+		if (skin.info) out += `Information=${skin.info}\n`;
+		out += `\n`;
+		out += `[Metadata]\n`;
+		out += `Name=${skin.name}\n`;
+		if (skin.author) out += `Author=${skin.author}\n`;
+		out += `Information=${skin.info || 'A skin created with Rainmaster'}\n`;
+		out += `Version=1000000\n\n`;
+		out += `[Variables]\n`;
+		skin.variables.forEach(v => { out += `${v.name}=${v.value}\n`; });
+		if (!skin.variables.length) out += `; Add your variables here\n`;
+		out += `\n`;
+		if (skin.bgAlpha > 0) {
+			out += `[MeterBackground]\n`;
+			out += `Meter=Shape\n`;
+			out += `Shape=Rectangle 0,0,${skin.width},${skin.height} | Fill Color ${bgRgb.r},${bgRgb.g},${bgRgb.b},${skin.bgAlpha} | StrokeWidth 0\n\n`;
+		}
+		skin.measures.forEach(m => {
+			out += `[${m.name}]\n`;
+			out += `Measure=${m.measureType}\n`;
+			if (m.formula) out += `Formula=${m.formula}\n`;
+			if (m.updateDivider > 0) out += `UpdateDivider=${m.updateDivider}\n`;
+			out += `\n`;
+		});
+		skin.elements.forEach(el => {
+			if (!el.visible) {
+				out += `; [${el.name}] - hidden\n; Hidden elements are commented out\n\n`;
+				return;
+			}
+			out += `[${el.name}]\n`;
+			if (el.type === 'shape') {
+				out += `Meter=Shape\n`;
+				let shapeStr = '';
+				if (el.shape === 'rectangle') shapeStr = `Rectangle 0,0,${el.w},${el.h}`;
+				else if (el.shape === 'rounded') shapeStr = `Rectangle 0,0,${el.w},${el.h},${el.cornerRadius || 8}`;
+				else if (el.shape === 'ellipse') shapeStr = `Ellipse ${el.w/2},${el.h/2},${el.w/2},${el.h/2}`;
+				else if (el.shape === 'line') shapeStr = `Line 0,${el.h/2},${el.w},${el.h/2}`;
+				const frgb = hexToRgb(el.fillColor);
+				const srgb = hexToRgb(el.strokeColor);
+				if (el.shape !== 'line') shapeStr += ` | Fill Color ${frgb.r},${frgb.g},${frgb.b},${el.fillAlpha}`;
+				else shapeStr += ` | Fill Color 0,0,0,0`;
+				shapeStr += ` | StrokeWidth ${el.strokeWidth}`;
+				shapeStr += ` | Stroke Color ${srgb.r},${srgb.g},${srgb.b},${el.strokeAlpha}`;
+				out += `Shape=${shapeStr}\n`;
+			} else if (el.type === 'string') {
+				out += `Meter=String\n`;
+				out += `Text=${el.text}\n`;
+				out += `FontSize=${el.fontSize}\n`;
+				out += `FontFace=${el.fontFamily}\n`;
+				const frgb = hexToRgb(el.fontColor);
+				out += `FontColor=${frgb.r},${frgb.g},${frgb.b},${el.fontAlpha}\n`;
+				if (el.fontWeight === 'bold') out += `FontWeight=700\n`;
+				if (el.italic) out += `Italic=1\n`;
+				if (el.underline) out += `Underline=1\n`;
+				const alignMap = { left: 'Left', center: 'Center', right: 'Right' };
+				out += `StringAlign=${alignMap[el.align] || 'Left'}\n`;
+				out += `AntiAlias=1\n`;
+			} else if (el.type === 'image') {
+				out += `Meter=Image\n`;
+				out += `ImageName=#@#${el.src || 'image.png'}\n`;
+				if (!el.preserveAspect) out += `PreserveAspectRatio=0\n`;
+			}
+			out += `X=${Math.round(el.x)}\n`;
+			out += `Y=${Math.round(el.y)}\n`;
+			out += `W=${Math.round(el.w)}\n`;
+			out += `H=${Math.round(el.h)}\n`;
+			if (el.rotation) out += `; Rotation: ${el.rotation}deg (use TransformationMatrix for actual rotation)\n`;
+			if (el.opacity < 255) out += `ImageAlpha=${el.opacity}\n`;
+			out += `\n`;
+		});
+		return out.trim() + '\n';
+	}
+
+	async function exportSkin() {
+		const skin = getCurrentSkin();
+		const code = generateINI();
+		try {
+			const zip = new JSZip();
+			const folderName = skin.name.replace(/[^\w\-]/g, '_');
+			const skinFolder = zip.folder(folderName);
+			skinFolder.file(folderName + '.ini', code);
+			const resourcesFolder = skinFolder.folder('@Resources');
+			let imageCount = 0;
+			skin.elements.forEach(el => {
+				if (el.type === 'image' && el.srcData) {
+					const base64 = el.srcData.split(',')[1];
+					const filename = el.src || el.srcFilename || 'image_' + imageCount + '.png';
+					resourcesFolder.file(filename, base64, { base64: true });
+					imageCount++;
+				}
+			});
+			const blob = await zip.generateAsync({ type: 'blob' });
+			saveAs(blob, folderName + '.zip');
+			toast('EXPORTED: ' + folderName.toUpperCase() + '.ZIP', 'success');
+		} catch (e) {
+			console.error(e);
+			toast('EXPORT FAILED: ' + e.message, 'error');
+		}
+	}
+
+	function copyCode() {
+		const text = $('#codeOutput').textContent;
+		navigator.clipboard.writeText(text).then(() => {
+			toast('COPIED TO CLIPBOARD', 'success');
+		}).catch(() => {
+			const ta = document.createElement('textarea');
+			ta.value = text;
+			document.body.appendChild(ta);
+			ta.select();
+			document.execCommand('copy');
+			ta.remove();
+			toast('COPIED TO CLIPBOARD', 'success');
+		});
+	}
+
+	function init() {
+		loadData();
+		setTheme(state.settings.theme);
+		$('#skinCanvas').classList.toggle('show-grid', state.settings.grid);
+		$('#btnGrid').classList.toggle('active', state.settings.grid);
+		$('#btnSnap').classList.toggle('active', state.settings.snap);
+		setZoom(state.settings.zoom);
+
+		const skin = getCurrentSkin();
+		state.nextId = skin.nextId || 1;
+		meterCounters.shape = 0;
+		meterCounters.string = 0;
+		meterCounters.image = 0;
+		skin.elements.forEach(el => {
+			if (el.type === 'shape') meterCounters.shape++;
+			else if (el.type === 'string') meterCounters.string++;
+			else if (el.type === 'image') meterCounters.image++;
+		});
+
+		setupInteractions();
+		render();
+
+		if (!state.settings.tutorialShown) {
+			setTimeout(() => { $('#tutorialModal').modal('show'); }, 500);
+		}
+		setTimeout(() => toast('WELCOME TO RAINMASTER'), 300);
+	}
+
+	return { init };
+})();
+
+document.addEventListener('DOMContentLoaded', App.init);
+</script>
+</body>
+</html>

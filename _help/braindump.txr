@@ -1,0 +1,5 @@
+so the idea is that the app uses projects to separate different skins
+when the app starts, it checks if theres a project currently selected
+	if there is, it loads the skins in that project and loads up the first one
+	if there isnt, it prompts the user to pick a project
+		basically opens a modal showing all the saved projects
