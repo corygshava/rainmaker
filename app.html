@@ -36,6 +36,7 @@
 	<script src="./cbl/_assets/js/customalerter.js"></script>
 	<script src="./cbl/_assets/js/super_encryptor.js"></script>
 	<script src="./cbl/_assets/js/app.js"></script>
+	<script src="./cbl/_assets/js/super_classes.js"></script>
 
 	<style>
 		:root{
@@ -66,9 +67,41 @@
 			--font-body: 'Inter', sans-serif;
 		}
 
-		body:has(.topbar .dropdown-menu.show) .main{
+		body:has(.topbar .dropdown-menu.show) .main,body:has(.modal.show) .main{
 			opacity: 0.2;
 			pointer-events: none;
+		}
+		.modal-content,.form-control-custom{
+			border-radius: 0px !important;
+		}
+		.modal-body:has(.project_card){
+			padding: 12px 0 !important;
+		}
+
+		.projectmenu_toolbar{
+			background: var(--black-2);
+		}
+		.projectmenu_toolbar .anc {
+		    font-family: var(--font-mono);
+		    text-transform: uppercase;
+		    font-weight: 100 !important;
+		}
+		.projectmenu_toolbar .anc span{
+			color: var(--clr-text-muted);
+		}
+		.project_card{
+			padding: 12px;
+			border-bottom: 1px solid var(--clr-border);
+		}
+		.project_card:last-child{
+			border-bottom: none;
+		}
+		.project_card:hover{
+			background: var(--darkcolor) !important;
+			cursor: pointer;
+		}
+		.project_card.active{
+			background: var(--theme-glass);
 		}
 	</style>
 
@@ -155,13 +188,11 @@
 		/* ============ CANVAS ============ */
 
 		/* ============ BOTTOM STATUS BAR ============ */
-		
-
 	</style>
 </head>
 <body data-mode="dark">
 	<!-- TOP BAR -->
-	<div class="topbar">
+	<div class="topbar overflow">
 		<div class="brand">
 			<div class="brand-icon"><i class="fas fa-cloud-rain"></i></div>
 			<div>
@@ -172,21 +203,31 @@
 
 		<div class="divider"></div>
 
-		<button class="skin-selector" id="skinSelector" title="Change Project">
+		<div class="flowline gap-tn">
+			<button class="skin-selector" id="skinSelector" title="Change Project" data-runme="view_saved" data-show_when_projects="yes">
+				<i class="fas fa-folder"></i>
+				<span class="name" data-subrole="project_name">Starter</span>
+				<i class="fas fa-caret-down" style="font-size:10px;"></i>
+			</button>
+			<button class="skin-selector" id="skinSelector" title="Change skin" data-runme="view_skins" data-show_when_projects="yes">
+				<i class="fas fa-file-alt"></i>
+				<span class="name" id="currentSkinName" data-subrole="cur_skin_name">MYSKIN</span>
+				<i class="fas fa-caret-down" style="font-size:10px;"></i>
+			</button>
+		</div>
+
+		<div class="spacer" data-show_when_projects="no"></div>
+
+		<button class="skin-selector themebg" id="skinSelector" title="Change Project" data-runme="view_saved" data-show_when_projects="no">
 			<i class="fas fa-folder"></i>
-			<span class="name" id="currentSkinName">Starter</span>
+			<span class="name" data-subrole="project_name">pick a project</span>
 			<i class="fas fa-caret-down" style="font-size:10px;"></i>
 		</button>
 
-		<button class="skin-selector" id="skinSelector" title="Change skin">
-			<i class="fas fa-file-alt"></i>
-			<span class="name" id="currentSkinName">MYSKIN</span>
-			<i class="fas fa-caret-down" style="font-size:10px;"></i>
-		</button>
 
-		<div class="divider"></div>
+		<div class="divider" data-show_when_projects="yes"></div>
 
-		<div class="nav-meta" data-role="metadata_display">
+		<div class="nav-meta" data-role="metadata_display" data-show_when_projects="yes">
 			<div class="meta-item">
 				<span class="meta-label">PROJ.</span>
 				<span class="meta-value">xcvdr</span>
@@ -201,11 +242,11 @@
 			</div>
 		</div>
 
-		<div class="spacer" style="flex:1"></div>
+		<div class="spacer" data-show_when_projects="yes"></div>
 
 		<!-- <div class="divider"></div> -->
 
-		<div class="flowline gap-tn">
+		<div class="flowline gap-tn" data-show_when_projects="yes">
 			<button class="btn-tool" id="btnGrid" title="Toggle Grid">
 				<i class="fas fa-th"></i>
 			</button>
@@ -217,14 +258,14 @@
 			</button>
 		</div>
 
-		<div class="flowline gap-tn">
+		<div class="flowline gap-tn" data-show_when_projects="yes">
 			<div class="dropdown">
 				<button type="button" class="btn-tool outline" data-toggle="dropdown">
 					OPTIONS 
 					<i class="fas fa-caret-down" style="font-size:10px;"></i>
 				</button>
 				<div class="dropdown-menu dropdown-menu-right dropmenu">
-					<a class="dropdown-item flowline left gap-tn centerline" href="#" id="btnNew" title="New Skin"><i class="fa fa-plus"></i> new skin</a>
+					<a class="dropdown-item flowline left gap-tn centerline" href="#" data-runme="add_skin" title="New Skin"><i class="fa fa-plus"></i> new skin</a>
 					<a class="dropdown-item flowline left gap-tn centerline" href="#" id="btnSkinSettings" title="Skin Settings"><i class="fa fa-cog"></i> settings</a>
 					<a class="dropdown-item flowline left gap-tn centerline" href="#" id="btnSaveSkin" title="Save to Library"><i class="fa fa-save"></i> save</a>
 				</div>
@@ -245,17 +286,19 @@
 			</button>
 		</div>
 
-		<div class="divider"></div>
+		<div class="divider" data-show_when_projects="yes"></div>
 
-		<button class="btn-tool primary" id="btnGenerate" title="Generate INI Code">
-			<i class="fas fa-code"></i> CODE
-		</button>
-		<button class="btn-tool success" id="btnExport" title="Export as .rmskin ZIP">
-			<i class="fas fa-download"></i> EXPORT
-		</button>
+		<div class="quick_export flowline gap-tn overflow" data-show_when_projects="yes">
+			<button class="btn-tool primary" id="btnGenerate" title="Generate INI Code">
+				<i class="fas fa-code"></i> CODE
+			</button>
+			<button class="btn-tool success" id="btnExport" title="Export as .rmskin ZIP">
+				<i class="fas fa-download"></i> EXPORT PROJECT
+			</button>
+		</div>
 	</div>
 
-	<div class="main">
+	<div class="main" data-role="mainguy">
 		<!-- LEFT TOOLBAR -->
 		<div class="leftbar">
 			<div class="toolbox w3-hide">
@@ -404,4 +447,372 @@
 			<span>USE A TOOL TO SEE HELP HERE</span>
 		</div>
 	</div>
+
+	<script>
+		app_prefix = "rainmaker_";
+
+		// UIs
+		let ui_mainguy = undefined;
+
+		// runtime vars
+		let cur_project = undefined;
+		let cur_skin = undefined;
+
+		let m_cur_project = new _sh({
+			name: "current project",
+			pref: "cur_project",
+			multiple: false,
+		});
+		let m_cur_skin = new _sh({
+			name: "current project",
+			pref: "cur_skin",
+			multiple: false,
+		});
+
+		let m_saved_projects = new _sh({
+			name: 'saved projects',
+			pref: 'saved_projects',
+		});
+		let m_saved_skins = new _sh({
+			name: 'saved skins',
+			pref: 'saved_skins',
+		});
+
+		function initstuff() {
+			let d_project = {};
+
+			const check_project = () => {
+				alert_info('checking project');
+				d_project = m_cur_project.getData().data;
+				console.log('project data',d_project);
+
+				if(is_empty(d_project)){
+					alert_dark('project not found');
+					view_saved();
+					disable_editor();
+				} else {
+					alert_dark('project found');
+					cur_project = d_project;
+				}
+
+				// renderProjectInfo();
+			}
+
+			const nxt = () => {
+				setup_uis();
+				check_project();
+				handle_runtime_uis();
+			}
+
+			confirmAction('NOTE','you were working on the skins lister thingy',nxt);
+		}
+
+		function setup_uis() {
+			ui_mainguy = document.querySelector(`[data-role="mainguy"]`);
+		}
+
+		function handle_runtime_uis() {
+			alert_info("setting up runtime UIs");
+			let conditional_uis = document.querySelectorAll(`[data-show_when_projects]`);
+
+			conditional_uis.forEach((f) => {
+				let is_there = !is_empty(cur_project);
+				let c = false;
+				let show = false;
+				let cls = "add";
+
+				if(is_there){
+					show = f.dataset.show_when_projects == "yes" || f.dataset.show_when_projects == "true";
+				} else {
+					show = f.dataset.show_when_projects == "no" || f.dataset.show_when_projects == "false";
+				}
+				cls = show ? "remove" : "add";
+				f.dataset.debugdata = cls;
+				f.classList[cls]("w3-hide");
+			});
+
+			// runtime data
+			let t_title = cur_project == undefined ? "??" : cur_project.title;
+			let t_recid = cur_project == undefined ? "xx" : cur_project.recid;
+			let t_skins_amt = m_saved_skins.data.length;
+			let t_my_skins_amt = cur_project == undefined ? "xx" : cur_project.skins.length;
+			let t_projects_amt = m_saved_projects.data.length;
+			let t_skin_name = cur_skin == undefined ? "??" : cur_skin.name;
+
+			// medata display
+			let d_meta = {
+				"PROJ" : t_recid,
+				"skins" : t_my_skins_amt,
+				"all proj" : t_projects_amt,
+			}
+			let dd = document.querySelector('[data-role="metadata_display"]');
+			let metaht = '';
+
+			Object.keys(d_meta).forEach((s,id) => {
+				metaht += `
+					<div class="meta-item slide-up" style="${mekstagger(200,id)}">
+						<span class="meta-label">${s}</span>
+						<span class="meta-value">${d_meta[s]}</span>
+					</div>
+				`;
+			})
+			dd.innerHTML = metaht;
+
+			// data displays
+			let sels = {
+				'[data-subrole="project_name"]' : t_title,
+				'[data-subrole="cur_skin_name"]' : t_skin_name,
+			};
+			Object.keys(sels).forEach(k => {
+				let uis = document.querySelectorAll(k);
+
+				uis.forEach(ui => {
+					let disprop = ui.dataset.displayprop || "innerHTML";
+					ui[disprop] = sels[k];
+				});
+			});
+		}
+
+		function disable_editor(con = true) {
+			let cls = con ? "add" : "remove";
+			ui_mainguy.classList[cls]('is_ghost');
+		}
+
+		window['view_saved'] = () => {
+			alert_info('showing saved projects');
+
+			let outht = '';
+			let stuff = m_saved_projects.data == undefined ? [] : m_saved_projects.data;
+			let t_recid = cur_project == undefined ? undefined : cur_project.recid;
+
+			if(stuff.length == 0){
+				outht = mekStandin(
+						mekDiv('<span>no items saved yet</span>' + 
+						mekButton({caption: 'add new',icon: 'fa fa-plus',_props: 'data-runme="add_project" data-dismiss="modal"',btype: 'primary'}), 'flow gap-sm')
+					);
+			} else {
+				let n = stuff.length;
+				let btn = mekButton({caption: 'add new',icon: 'fa fa-plus',_props: 'data-runme="add_project" data-dismiss="modal"',btype: 'primary',_class:"sm"});
+				outht = mekDiv(
+						`<div class="anc">${mekBold(n.toString().padStart(2,'0'),'themetxt')} <span>${plural('project',n)} found</span></div>
+						${btn}`
+					,'flowline gap-sm spread spacy-sm projectmenu_toolbar');
+			}
+
+			stuff.forEach(s => {
+				let actcls = s.recid == t_recid ? "active" : "";
+				outht += `
+					<div class="project_card ${actcls}" data-runme="pick_project" data-recid="${s.recid}" data-dismiss="modal">
+						<div class="details"><b>${s.title}</b></div>
+						<div class="metadata flowline gap-sm left" style="opacity: 0.6; font-size: 0.7rem">
+							<span>added: ${mekTag('small',formatDate0(s.created_at),'text-muted')}</span>
+							<span>updated: ${mekTag('small',formatDate0(s.updated_at),'text-muted')}</span>
+						</div>
+					</div>
+				`;
+			})
+
+			setTimeout(() => {
+				mekModal(
+					{
+						title: 'Saved projects',
+						sub: 'here are the saved skin projects',
+						size: 'md',
+						has_continue: false,
+						content: outht,
+					}
+				);
+			}, 300);
+		}
+
+		window['add_project'] = () => {
+			alert_info('adding a new project');
+
+			const get_info = () => {
+				let inputs = [
+					{
+						label: "project title",
+						field: "title",
+						placeholder: "pick a title",
+						typ: "text",
+						required: true,
+					},
+					{
+						label: "description [optional]",
+						field: "description",
+						placeholder: "pick a title",
+						typ: "textarea",
+						// required: true,
+					}
+				]
+
+				get_input('Add new project',inputs,add_it);
+			}
+
+			const add_it = (d) => {
+				console.log("to add", d);
+
+				let fprint = mekRandomString(5);
+				let skin = {
+					name: "starter skin",
+					data: [],
+					meta: {},
+					panel_print: fprint,
+				};
+
+				let newskin = m_saved_skins.add_one(skin);
+				d.skins = [newskin.recid];
+				d.print = fprint;
+
+				// let
+				let newrec = m_saved_projects.add_one(d);
+
+				console.log("new project record",newrec);
+				pick_project({dataset: {recid: newrec.id}}, newrec)
+			};
+
+			setTimeout(() => {
+				get_info();
+			},400);
+		}
+		window['pick_project'] = (el,data = undefined) => {
+			let mine = undefined;
+			if(data == undefined){
+				mine = m_saved_projects.find(el.dataset.recid);
+			} else {
+				mine = data;
+			}
+
+			console.log('data', mine);
+
+			m_cur_project.setData(mine);
+			cur_project = mine;
+			// input.value = mine.data;
+
+			handle_runtime_uis();
+			disable_editor(false);
+		}
+
+
+		window['view_skins'] = () => {
+			alert_info('showing saved projects');
+
+			if(cur_project == undefined){
+				alert_danger("no project selected");
+				return;
+			}
+
+			let outht = '';
+			let stuff = cur_project.skins == undefined ? [] : cur_project.skins;
+			let t_recid = cur_skin == undefined ? undefined : cur_skin.recid;
+
+			if(stuff.length == 0){
+				outht = mekStandin(
+						mekDiv('<span>no skins saved yet <br>(this shouldnt happen)</span>' + 
+						mekButton({caption: 'add new',icon: 'fa fa-plus',_props: 'data-runme="add_skin" data-dismiss="modal"',btype: 'primary'}), 'flow gap-sm')
+					);
+			} else {
+				let n = stuff.length;
+				let btn = mekButton({caption: 'add new',icon: 'fa fa-plus',_props: 'data-runme="add_skin" data-dismiss="modal"',btype: 'primary',_class:"sm"});
+				outht = mekDiv(
+						`<div class="anc">${mekBold(n.toString().padStart(2,'0'),'themetxt')} <span>${plural('skin',n)} found</span></div>
+						${btn}`
+					,'flowline gap-sm spread spacy-sm projectmenu_toolbar');
+			}
+
+			stuff.forEach((sk,id) => {
+				let s = m_saved_skins.find(sk);
+				let actcls = s.recid == t_recid ? "active" : "";
+
+				if(s == undefined){
+					outht += mekDiv('invalid skin','spacy-sm w3-text-red w3-center');
+				} else {
+					outht += `
+						<div class="project_card ${actcls}" data-runme="pick_skin" data-recid="${s.recid}" data-dismiss="modal">
+							<div class="details"><b>${s.name}</b></div>
+							<div class="metadata flowline gap-sm left" style="opacity: 0.6; font-size: 0.7rem">
+								<span>added: ${mekTag('small',formatDate0(s.created_at),'text-muted')}</span>
+								<span>updated: ${mekTag('small',formatDate0(s.updated_at),'text-muted')}</span>
+							</div>
+						</div>
+					`;
+				}
+			})
+
+			setTimeout(() => {
+				mekModal(
+					{
+						title: 'Project Skins',
+						sub: 'here are the skins for this project',
+						size: 'md',
+						has_continue: false,
+						content: outht,
+					}
+				);
+			}, 300);
+		}
+		window['add_skin'] = () => {
+			alert_info('adding a new project');
+
+			const get_info = () => {
+				let inputs = [
+					{
+						label: "skin name",
+						field: "name",
+						placeholder: "what do we call this skin",
+						typ: "text",
+						required: true,
+					}
+				]
+
+				get_input('Add new skin',inputs,add_it);
+			}
+
+			const add_it = (d) => {
+				console.log("to add", d);
+
+				let fprint = cur_project.print;
+				let skin = {
+					name: d.name,
+					data: [],
+					meta: {},
+					panel_print: fprint,
+				};
+
+				let newskin = m_saved_skins.add_one(skin);
+				cur_project.skins.push(newskin.recid);
+
+				let newrec = m_saved_projects.update(cur_project);
+				pick_project({dataset: {recid: newrec.recid}}, newrec);
+				pick_skin({dataset: {recid: newskin.recid}}, newskin);
+
+				console.log("new project record",newrec);
+			};
+
+			setTimeout(() => {
+				get_info();
+			},400);
+		}
+
+		window['pick_skin'] = (el,data = undefined) => {
+			let mine = undefined;
+			if(data == undefined){
+				mine = m_saved_skins.find(el.dataset.recid);
+				// console.log('passed data is undefined');
+			} else {
+				mine = data;
+			}
+
+			console.log('data', mine);
+
+			m_cur_skin.setData(mine);
+			cur_skin = mine;
+			// input.value = mine.data;
+
+			handle_runtime_uis();
+			disable_editor(false);
+		}
+
+		callOnLoad.push({act: initstuff});
+	</script>
 </body>

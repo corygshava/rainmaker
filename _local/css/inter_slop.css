@@ -5,6 +5,7 @@
 	--black-4: #222222;
 	--white: #fff;
 	--themecolor: #db0072;
+	--theme-glass: #db007222;
 	--darkcolor: #89001d;
 	--danger: #ff3b30;
 	--success: #30d158;
@@ -19,6 +20,7 @@
 	--border: #111;
 	--bg-canvas: #1a1a1a;
 	--bg-canvas-skin: #2a2a2a;
+	/*--roundness: 0px;*/
 
 	--font-display: 'inter_24pt', sans-serif;
 	--font-mono: 'JetBrains Mono', monospace;
@@ -666,6 +668,9 @@
 
 /* utils */
 	/* extra btns */
+		.mybtn{
+			border-radius: 0px;
+		}
 		.btn-tool {
 			background: transparent;
 			border: 1px solid transparent;

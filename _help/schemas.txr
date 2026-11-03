@@ -1,0 +1,9 @@
+projects
+	title
+	description
+	skins (array of ids)
+skins
+	name
+	meta
+	data
+	variant_id
